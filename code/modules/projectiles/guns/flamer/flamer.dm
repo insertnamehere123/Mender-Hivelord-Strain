@@ -204,7 +204,7 @@
 	R.rangefire = Clamp(R.rangefire, current_mag.reagents.min_fire_rad, current_mag.reagents.max_fire_rad)
 	var/max_range = R.rangefire
 	if (max_range < fuel_pressure) //Used for custom tanks, allows for higher ranges
-		max_range = Clamp(fuel_pressure, 0, current_mag.reagents.max_fire_rad)
+		max_range = Clamp(max_range + fuel_pressure - 1, 0, current_mag.reagents.max_fire_rad)
 	if(R.rangefire == -1)
 		max_range = current_mag.reagents.max_fire_rad
 
@@ -374,10 +374,15 @@
 		weapon_cause_data = create_cause_data(initial(name), null)
 
 	icon_state = "[flame_icon]_2"
-
-	//Fire duration increases with fuel usage
-	firelevel = R.durationfire + fuel_pressure*R.durationmod
-	burnlevel = R.intensityfire
+	//No need to check mins/maxes if we aren't using custom fuels and pressures
+	if(fuel_pressure > 1)
+		//Duration scales from 1 - 1.5 times the current duration based on the pressure. This is then clamped to the min/max of the fuel tank.
+		firelevel = Clamp(R.durationfire * Clamp((fuel_pressure - 5) * 0.3, 1, 1.5), tied_reagents.min_fire_dur, tied_reagents.max_fire_dur)
+		//Intensity scales from 1 - 1.25
+		burnlevel = Clamp(R.intensityfire * Clamp((fuel_pressure - 5) * 0.25, 1, 1.5), tied_reagents.min_fire_int, tied_reagents.max_fire_int)
+	else
+		firelevel = R.durationfire
+		burnlevel = R.intensityfire
 
 	START_PROCESSING(SSobj, src)
 
@@ -500,7 +505,7 @@
 
 	if(sig_result & COMPONENT_NO_BURN && !tied_reagent.fire_penetrating)
 		burn_damage = 0
-	
+
 	if(!burn_damage)
 		to_chat(M, SPAN_DANGER("You step over the flames."))
 		return

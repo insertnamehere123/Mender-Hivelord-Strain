@@ -252,7 +252,7 @@
 
 
 /obj/item/storage/large_holster/fuelpack/attackby(var/obj/item/A as obj, mob/user as mob)
-	if(istype(A, /obj/item/ammo_magazine/flamer_tank/large/))
+	if(istype(A, /obj/item/ammo_magazine/flamer_tank/large/) && istype(A, /obj/item/ammo_magazine/flamer_tank/custom/large))
 		switch_fuel(A, user)
 		return
 
