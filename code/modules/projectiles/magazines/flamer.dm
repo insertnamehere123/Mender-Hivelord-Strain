@@ -137,7 +137,9 @@
 	desc = "A fuel tank used to store fuel for use in the M240 incinerator unit. This one has been modified with a pressure regulator and an internal propellant tank."
 	matter = list("metal" = 3750)
 	flamer_chem = null
-	max_rounds = 100
+	max_rounds = 150
+	max_intensity = 50
+	max_duration = 40
 	max_range = 5
 	fuel_pressure = 1
 
@@ -220,6 +222,5 @@
 	gun_type = /obj/item/weapon/gun/flamer/M240T
 	max_rounds = 250
 
-	max_intensity = 60
 	max_range = 8
-	max_duration = 50
+	max_duration = 60
