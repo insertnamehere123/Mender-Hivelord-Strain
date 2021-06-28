@@ -376,7 +376,7 @@
 	icon_state = "[flame_icon]_2"
 	//No need to check mins/maxes if we aren't using custom fuels and pressures
 	if(fuel_pressure > 1)
-		//Duration scales from 1 - 1.5 times the current duration based on the pressure. This is then clamped to the min/max of the fuel tank.
+		//Duration scales from 1 - 1.5 times the current duration based on the pressure after pressure level 5. This is then clamped to the min/max of the fuel tank.
 		firelevel = Clamp(R.durationfire * Clamp((fuel_pressure - 5) * 0.3, 1, 1.5), tied_reagents.min_fire_dur, tied_reagents.max_fire_dur)
 		//Intensity scales from 1 - 1.25
 		burnlevel = Clamp(R.intensityfire * Clamp((fuel_pressure - 5) * 0.25, 1, 1.5), tied_reagents.min_fire_int, tied_reagents.max_fire_int)
