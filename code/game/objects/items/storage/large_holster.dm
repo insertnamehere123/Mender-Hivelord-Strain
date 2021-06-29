@@ -147,6 +147,7 @@
 	var/obj/item/ammo_magazine/flamer_tank/large/fuel
 	var/obj/item/ammo_magazine/flamer_tank/large/B/fuelB
 	var/obj/item/ammo_magazine/flamer_tank/large/X/fuelX
+	var/obj/item/ammo_magazine/flamer_tank/custom/large/custom_fuel
 	var/obj/item/ammo_magazine/flamer_tank/large/active_fuel
 	var/obj/item/weapon/gun/flamer/M240T/linked_flamer
 	var/toggling = FALSE
@@ -162,6 +163,7 @@
 	fuel = new /obj/item/ammo_magazine/flamer_tank/large()
 	fuelB =	new /obj/item/ammo_magazine/flamer_tank/large/B()
 	fuelX =	new /obj/item/ammo_magazine/flamer_tank/large/X()
+	custom_fuel = new /obj/item/ammo_magazine/flamer_tank/custom/large()
 	active_fuel = fuel
 	flamer_overlay = overlay_image('icons/obj/items/clothing/backpacks.dmi', "+m240t")
 
@@ -226,9 +228,11 @@
 
 	// Handles toggling of fuel. Snowflake way of changing action icon. Change icon, update action icon, change icon back
 	if(istype(active_fuel, /obj/item/ammo_magazine/flamer_tank/large/X))
-		active_fuel = fuel
+		active_fuel = custom_fuel
 	else if(istype(active_fuel, /obj/item/ammo_magazine/flamer_tank/large/B))
 		active_fuel = fuelX
+	else if(istype(active_fuel, /obj/item/ammo_magazine/flamer_tank/custom/large))
+		active_fuel = fuel
 	else
 		active_fuel = fuelB
 
@@ -239,6 +243,8 @@
 	to_chat(user, "You switch the fuel tank to <b>[active_fuel.caliber]</b>")
 	playsound(src, 'sound/machines/click.ogg', 25, TRUE)
 	F.current_mag = active_fuel
+	//sets pressure for custom tanks
+	F.fuel_pressure = active_fuel.fuel_pressure
 	F.update_icon()
 
 	return TRUE
@@ -252,14 +258,14 @@
 
 
 /obj/item/storage/large_holster/fuelpack/attackby(var/obj/item/A as obj, mob/user as mob)
-	if(istype(A, /obj/item/ammo_magazine/flamer_tank/large/) && istype(A, /obj/item/ammo_magazine/flamer_tank/custom/large))
+	if(istype(A, /obj/item/ammo_magazine/flamer_tank/large/) || istype(A, /obj/item/ammo_magazine/flamer_tank/custom/large))
 		switch_fuel(A, user)
 		return
 
 	var/obj/item/weapon/gun/flamer/M240T/F = A
 	if(istype(F) && !(F.fuelpack))
 		F.link_fuelpack(user)
-		if(F.current_mag && !(F.current_mag in list(fuel,fuelB,fuelX)))
+		if(F.current_mag && !(F.current_mag in list(fuel,fuelB,fuelX,custom_fuel)))
 			to_chat(user, SPAN_WARNING("\The [F.current_mag] is ejected by the Broiler-T back harness and replaced with \the [active_fuel]!"))
 			F.unload(user, drop_override = TRUE)
 			F.current_mag = active_fuel
@@ -267,7 +273,7 @@
 
 	. = ..()
 
-/obj/item/storage/large_holster/fuelpack/proc/switch_fuel(var/obj/item/ammo_magazine/flamer_tank/large/new_fuel, var/mob/user)
+/obj/item/storage/large_holster/fuelpack/proc/switch_fuel(var/obj/item/ammo_magazine/flamer_tank/new_fuel, var/mob/user)
 	// Switch out the currently stored fuel and drop it
 	if(istype(new_fuel, /obj/item/ammo_magazine/flamer_tank/large/X/))
 		fuelX.forceMove(get_turf(user))
@@ -275,7 +281,10 @@
 	else if(istype(new_fuel, /obj/item/ammo_magazine/flamer_tank/large/B/))
 		fuelB.forceMove(get_turf(user))
 		fuelB = new_fuel
-	else
+	else if (istype(new_fuel, /obj/item/ammo_magazine/flamer_tank/custom/large))
+		custom_fuel.forceMove(get_turf(user))
+		custom_fuel = new_fuel
+	else if (istype(new_fuel, /obj/item/ammo_magazine/flamer_tank/large))
 		fuel.forceMove(get_turf(user))
 		fuel = new_fuel
 	visible_message("[user] swaps out the fuel tank in [src].","You swap out the fuel tank in [src] and drop the old one.")
@@ -286,7 +295,8 @@
 	// If the fuel being switched is the active one, set it as new_fuel until it gets toggled
 	if(istype(new_fuel, active_fuel))
 		active_fuel = new_fuel
-
+		if(linked_flamer)
+			linked_flamer.fuel_pressure = new_fuel.fuel_pressure
 
 /obj/item/storage/large_holster/fuelpack/examine(mob/user)
 	..()
@@ -299,6 +309,8 @@
 			to_chat(user, "The [fuelB.caliber] currently contains: [round(fuelB.get_ammo_percent())]% fuel.")
 		if(fuelX)
 			to_chat(user, "The [fuelX.caliber] currently contains: [round(fuelX.get_ammo_percent())]% fuel.")
+		if(custom_fuel)
+			to_chat(user, "The [custom_fuel.caliber] currently contains: [round(custom_fuel.get_ammo_percent())]% fuel.")
 
 /datum/action/item_action/specialist/toggle_fuel
 	ability_primacy = SPEC_PRIMARY_ACTION_1
