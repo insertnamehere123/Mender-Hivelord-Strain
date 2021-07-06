@@ -377,9 +377,9 @@
 	//No need to check mins/maxes if we aren't using custom fuel pressures
 	if(fuel_pressure > 1)
 		//Duration scales from 1 - 1.5 times the current duration based on the pressure after pressure level 5. This is then clamped to the min/max of the fuel tank.
-		firelevel = Clamp(R.durationfire * Clamp(((fuel_pressure - 5) * 0.1) + 1, 1, 1.5), tied_reagents.min_fire_dur, tied_reagents.max_fire_dur)
+		firelevel = Clamp(R.durationfire * Clamp(((fuel_pressure - 5) * FLAME_PRESSURE_DURATION_SCALING) + 1, 1, FLAME_DURATION_SCALE_MAX), tied_reagents.min_fire_dur, tied_reagents.max_fire_dur)
 		//Intensity scales from 1 - 1.25
-		burnlevel = Clamp(R.intensityfire * Clamp(((fuel_pressure - 5) * 0.05) + 1, 1, 1.25), tied_reagents.min_fire_int, tied_reagents.max_fire_int)
+		burnlevel = Clamp(R.intensityfire * Clamp(((fuel_pressure - 5) * FLAME_PRESSURE_INTENSITY_SCALING) + 1, 1, FLAME_INTENSITY_SCALE_MAX), tied_reagents.min_fire_int, tied_reagents.max_fire_int)
 	else
 		firelevel = R.durationfire
 		burnlevel = R.intensityfire
@@ -391,7 +391,7 @@
 	var/burn_dam = burnlevel*FIRE_DAMAGE_PER_LEVEL
 
 	if(tied_reagents && !tied_reagents.locked)
-		var/removed = tied_reagents.remove_reagent(tied_reagent.id, FLAME_REAGENT_USE_AMOUNT * n_ceil(fuel_pressure * 0.5))
+		var/removed = tied_reagents.remove_reagent(tied_reagent.id, FLAME_REAGENT_USE_AMOUNT * n_ceil(fuel_pressure * FLAME_REAGENT_PRESSURE_SCALING))
 		if(removed)
 			qdel(src)
 			return
