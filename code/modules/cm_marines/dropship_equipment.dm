@@ -632,7 +632,7 @@
 	if(ammo_warn_sound)
 		playsound(impact, ammo_warn_sound, ammo_warn_sound_volume, 1)
 	new /obj/effect/overlay/temp/blinking_laser (impact)
-	sleep(30)
+	sleep(20)
 	SA.source_mob = user
 	SA.detonate_on(impact)
 
