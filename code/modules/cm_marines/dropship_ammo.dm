@@ -1,4 +1,3 @@
-
 //////////////////////////////////// dropship weapon ammunition ////////////////////////////
 
 /obj/structure/ship_ammo
@@ -251,36 +250,6 @@
 	spawn(5)
 		cell_explosion(impact, 450, 100, EXPLOSION_FALLOFF_SHAPE_EXPONENTIAL, null, create_cause_data(initial(name), source_mob)) //Insane fall off combined with insane damage makes the Keeper useful for single targets, but very bad against multiple.
 		qdel(src)
-
-/obj/structure/ship_ammo/rocket/fatty
-	name = "\improper SM-17 'Fatty'"
-	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched. It puts smile on your face somewhy."
-	icon_state = "fatty"
-	ammo_id = "f"
-	travelling_time = 80 //even slower and less deadly accurate, lets hope its finaly fixed and working
-	max_inaccuracy = 4
-	point_cost = 800
-	fire_mission_delay = 0 //0 means unusable
-	warning_sound = 'sound/weapons/gun_mortar_travel.ogg'
-	warning_sound_volume = 100
-
-/obj/structure/ship_ammo/rocket/fatty/detonate_on(turf/impact)
-	set waitfor = 0
-	impact.ceiling_debris_check(2)
-	spawn(5)
-		cell_explosion(impact,300, 44, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)) //first explosion is small to trick xenos into thinking its a minirocket.
-	sleep(25)
-	var/list/impact_coords = list(list(-3,3),list(0,4),list(3,3),list(-4,0),list(4,0),list(-3,-3),list(0,-4), list(3,-3))
-	var/turf/T
-	var/list/coords
-	for(var/i=1 to 8)
-		coords = impact_coords[i]
-		T = locate(impact.x+coords[1],impact.y+coords[2],impact.z)
-		T.ceiling_debris_check(2)
-		spawn(5)
-			cell_explosion(T,200, 50, EXPLOSION_FALLOFF_SHAPE_LINEAR, null,  create_cause_data(initial(name), source_mob))
-	qdel(src)
-
 /obj/structure/ship_ammo/rocket/harpoon
 	name = "\improper AGM-84 'Harpoon'"
 	desc = "THe AGM-84 Harpoon is an Anti-Ship Missile Was designed and used to effectively take down enemy ships with huge blast wave but low explosive power, this one is modified to use ground signals."
