@@ -19,7 +19,7 @@
 	var/transferable_ammo = FALSE //whether the ammo inside this magazine can be transfered to another magazine.
 	var/accuracy_range = 3 //how many tiles the ammo can deviate from the laser target
 	var/warning_sound = 'sound/machines/hydraulics_2.ogg' //sound played mere seconds before impact
-	var/warning_sound_volume = 70
+	var/warning_sound_volume = 80
 	var/ammo_used_per_firing = 1
 	var/max_inaccuracy = 6 //what's the max deviation allowed when the ammo is no longer guided by a laser.
 	var/point_cost = 0 //how many points it costs to build this with the fabricator, set to 0 if unbuildable.
@@ -254,6 +254,51 @@
 		cell_explosion(impact, 450, 100, EXPLOSION_FALLOFF_SHAPE_EXPONENTIAL, null, create_cause_data(initial(name), source_mob)) //Insane fall off combined with insane damage makes the Keeper useful for single targets, but very bad against multiple.
 		qdel(src)
 
+/obj/structure/ship_ammo/rocket/fatty
+	name = "\improper SM-17 'Fatty'"
+	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched. It was removed from dropship munitions by High Command two years ago, but was retrofitted and back in line of service"
+	icon_state = "fatty"
+	ammo_id = "f"
+	travelling_time = 80 //even slower and less deadly accurate, lets hope its finaly fixed and working
+	max_inaccuracy = 4
+	point_cost = 800
+	fire_mission_delay = 0 //0 means unusable
+	warning_sound = 'sound/weapons/gun_mortar_travel.ogg'
+	warning_sound_volume = 100
+
+/obj/structure/ship_ammo/rocket/fatty/detonate_on(turf/impact)
+	set waitfor = 0
+	impact.ceiling_debris_check(2)
+	spawn(5)
+		cell_explosion(impact,200, 44, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)) //first explosion is small to trick xenos into thinking its a minirocket.
+	sleep(25)
+	var/list/impact_coords = list(list(-3,3),list(0,4),list(3,3),list(-4,0),list(4,0),list(-3,-3),list(0,-4), list(3,-3))
+	var/turf/T
+	var/list/coords
+	for(var/i=1 to 8)
+		coords = impact_coords[i]
+		T = locate(impact.x+coords[1],impact.y+coords[2],impact.z)
+		T.ceiling_debris_check(2)
+		spawn(5)
+			cell_explosion(T,150, 50, EXPLOSION_FALLOFF_SHAPE_LINEAR, null,  create_cause_data(initial(name), source_mob))
+	qdel(src)
+
+/obj/structure/ship_ammo/rocket/harpoon
+	name = "\improper AGM-84 'Harpoon'"
+	desc = "THe AGM-84 Harpoon is an Anti-Ship Missile Was designed and used to effectively take down enemy ships with huge blast wave but low explosive power, this one is modified to use ground signals."
+	icon_state = "harpoon"
+	ammo_id = "s"
+	travelling_time = 60
+	point_cost = 700
+	fire_mission_delay = 4
+//Looks kinda OP but all it can actually do is just to blow windows and some of other things out, cant do much damage.
+/obj/structure/ship_ammo/rocket/harpoon/detonate_on(turf/impact)
+	impact.ceiling_debris_check(3)
+	spawn(5)
+		cell_explosion(impact, 150, 10, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+		qdel(src)
+
+
 /obj/structure/ship_ammo/rocket/napalm
 	name = "\improper XN-99 'Napalm'"
 	desc = "The XN-99 'Napalm' is an incendiary missile  used to turn specific targeted areas into giant balls of fire for a long time."
@@ -275,7 +320,7 @@
 
 /obj/structure/ship_ammo/minirocket
 	name = "mini rocket stack"
-	desc = "A pack of laser guided mini rockets."
+	desc = "A pack of laser guided minirockets."
 	icon_state = "minirocket"
 	icon = 'icons/obj/structures/props/almayer_props.dmi'
 	equipment_type = /obj/structure/dropship_equipment/weapon/minirocket_pod
@@ -312,7 +357,7 @@
 
 /obj/structure/ship_ammo/minirocket/incendiary
 	name = "incendiary mini rocket stack"
-	desc = "A pack of laser guided incendiary mini rockets."
+	desc = "A pack of laser guided incendiary minirockets."
 	icon_state = "minirocket_inc"
 	point_cost = 500
 	fire_mission_delay = 3 //high cooldown
@@ -321,3 +366,17 @@
 	..()
 	spawn(5)
 		fire_spread(impact, create_cause_data(initial(name), source_mob), 3, 25, 20, "#EE6515")
+
+/obj/structure/ship_ammo/minirocket/flare
+    name = "Minirocket stack of flares"
+    desc = "A pack of laser guided flare minirockets"
+    icon_state = "minirocket_flr"
+    point_cost = 150
+    fire_mission_delay = 4 //we dont need a low cooldown because flares are emiting light
+
+/obj/structure/ship_ammo/minirocket/flare/detonate_on(turf/impact)
+    impact.ceiling_debris_check(2)
+    spawn(5)
+        new /obj/item/device/flashlight/flare/on/illumination(impact)
+        if(!ammo_count && loc)
+            qdel(src)
