@@ -7,7 +7,7 @@
 	name = XENO_STRUCTURE_PYLON
 	desc = "A towering spike of resin. Its base pulsates with large tendrils."
 	icon_state = "pylon"
-	health = 1800
+	health = 1500
 	luminosity = 2
 	block_range = 0
 	var/cover_range = WEED_RANGE_PYLON

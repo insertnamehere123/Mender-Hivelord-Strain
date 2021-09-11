@@ -33,7 +33,7 @@
 	name = XENO_STRUCTURE_PYLON
 	build_type = /obj/effect/alien/resin/special/pylon
 	build_icon_state = "pylon"
-	crystals_required = 100 * XENO_STRUCTURE_PLASMA_MULTIPLIER
+	crystals_required = 150 * XENO_STRUCTURE_PLASMA_MULTIPLIER
 	block_range = 0
 
 /datum/construction_template/xenomorph/pool
