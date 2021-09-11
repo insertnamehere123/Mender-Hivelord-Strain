@@ -1,6 +1,5 @@
 
 
-
 //////////////////////////////////// dropship weapon ammunition ////////////////////////////
 
 /obj/structure/ship_ammo
@@ -256,7 +255,7 @@
 
 /obj/structure/ship_ammo/rocket/fatty
 	name = "\improper SM-17 'Fatty'"
-	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched. It was removed from dropship munitions by High Command two years ago, but was retrofitted and back in line of service"
+	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched. It puts smile on your face somewhy.
 	icon_state = "fatty"
 	ammo_id = "f"
 	travelling_time = 80 //even slower and less deadly accurate, lets hope its finaly fixed and working
@@ -270,7 +269,7 @@
 	set waitfor = 0
 	impact.ceiling_debris_check(2)
 	spawn(5)
-		cell_explosion(impact,200, 44, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)) //first explosion is small to trick xenos into thinking its a minirocket.
+		cell_explosion(impact,300, 44, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)) //first explosion is small to trick xenos into thinking its a minirocket.
 	sleep(25)
 	var/list/impact_coords = list(list(-3,3),list(0,4),list(3,3),list(-4,0),list(4,0),list(-3,-3),list(0,-4), list(3,-3))
 	var/turf/T
@@ -280,7 +279,7 @@
 		T = locate(impact.x+coords[1],impact.y+coords[2],impact.z)
 		T.ceiling_debris_check(2)
 		spawn(5)
-			cell_explosion(T,150, 50, EXPLOSION_FALLOFF_SHAPE_LINEAR, null,  create_cause_data(initial(name), source_mob))
+			cell_explosion(T,200, 50, EXPLOSION_FALLOFF_SHAPE_LINEAR, null,  create_cause_data(initial(name), source_mob))
 	qdel(src)
 
 /obj/structure/ship_ammo/rocket/harpoon
