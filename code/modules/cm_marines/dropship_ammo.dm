@@ -1,5 +1,4 @@
 
-
 //////////////////////////////////// dropship weapon ammunition ////////////////////////////
 
 /obj/structure/ship_ammo
@@ -255,7 +254,7 @@
 
 /obj/structure/ship_ammo/rocket/fatty
 	name = "\improper SM-17 'Fatty'"
-	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched. It puts smile on your face somewhy.
+	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched. It puts smile on your face somewhy."
 	icon_state = "fatty"
 	ammo_id = "f"
 	travelling_time = 80 //even slower and less deadly accurate, lets hope its finaly fixed and working
