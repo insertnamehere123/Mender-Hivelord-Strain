@@ -136,6 +136,7 @@
 	name = "custom incinerator tank"
 	desc = "A fuel tank used to store fuel for use in the M240 incinerator unit. This one has been modified with a pressure regulator and an internal propellant tank."
 	matter = list("metal" = 3750)
+	caliber = "custom fuel"
 	flamer_chem = null
 	max_rounds = 200
 	max_intensity = 50

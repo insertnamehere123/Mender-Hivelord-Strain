@@ -293,7 +293,7 @@
 	..()
 
 /obj/item/weapon/gun/flamer/M240T/unload(mob/user, reload_override = 0, drop_override = 0, loc_override = 0)
-	if (fuelpack && (current_mag in list(fuelpack.fuel, fuelpack.fuelB, fuelpack.fuelX)))
+	if (fuelpack && (current_mag in list(fuelpack.fuel, fuelpack.fuelB, fuelpack.fuelX, fuelpack.custom_fuel)))
 		to_chat(user, SPAN_WARNING("The incinerator tank is locked in place. It cannot be removed."))
 		return
 	..()
