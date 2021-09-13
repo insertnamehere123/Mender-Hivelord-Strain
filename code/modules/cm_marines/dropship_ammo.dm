@@ -262,7 +262,7 @@
 /obj/structure/ship_ammo/rocket/harpoon/detonate_on(turf/impact)
 	impact.ceiling_debris_check(3)
 	spawn(5)
-		cell_explosion(impact, 150, 10, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+		cell_explosion(impact, 200, 16, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 		qdel(src)
 
 
@@ -339,7 +339,7 @@
     desc = "A pack of laser guided flare minirockets"
     icon_state = "minirocket_flr"
     point_cost = 150
-    fire_mission_delay = 4 //we dont need a low cooldown because flares are emiting light
+    fire_mission_delay = 4 //we dont need a low cooldown because flares are emiting light, not explosion heh.
 
 /obj/structure/ship_ammo/minirocket/flare/detonate_on(turf/impact)
     impact.ceiling_debris_check(2)
