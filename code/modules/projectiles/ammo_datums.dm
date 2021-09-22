@@ -79,7 +79,8 @@
 /datum/ammo/proc/on_hit_mob(mob/M, obj/item/projectile/P) //Special effects when hitting mobs.
 	return
 
-/datum/ammo/proc/on_pointblank(mob/M, obj/item/projectile/P, mob/living/user) //Special effects when pointblanking mobs.
+///Special effects when pointblanking mobs. Ultimately called from /living/attackby(). Return TRUE to end the PB attempt.
+/datum/ammo/proc/on_pointblank(mob/living/L, obj/item/projectile/P, mob/living/user, obj/item/weapon/gun/fired_from)
 	return
 
 /datum/ammo/proc/on_hit_obj(obj/O, obj/item/projectile/P) //Special effects when hitting objects.
@@ -370,19 +371,28 @@
 /datum/ammo/bullet/pistol/heavy/super/highimpact/on_hit_mob(mob/M, obj/item/projectile/P)
 	knockback(M, P, 4)
 
-/datum/ammo/bullet/pistol/heavy/super/highimpact/on_pointblank(mob/M, obj/item/projectile/P, mob/living/user) //Special effects when pointblanking mobs.
-	if(!user || !isHumanStrict(M) || user.zone_selected != "head" || user.a_intent != INTENT_HARM)
-		return ..()
+/datum/ammo/bullet/pistol/heavy/super/highimpact/on_pointblank(mob/living/L, obj/item/projectile/P, mob/living/user, obj/item/weapon/gun/fired_from)
+	if(!user || L == user || user.zone_selected != "head" || user.a_intent != INTENT_HARM || !isHumanStrict(L))
+		return
 
 	if(!skillcheck(user, SKILL_LEADERSHIP, SKILL_LEAD_MASTER) || !skillcheck(user, SKILL_POLICE, SKILL_POLICE_SKILLED))
 		to_chat(user, SPAN_DANGER("You don't know how to execute someone correctly."))
-		return ..()
+		return TRUE
 
-	var/mob/living/carbon/human/H = M
-	user.visible_message(SPAN_DANGER("[user] aims at [M]'s head!"), SPAN_HIGHDANGER("You aim at [M]'s head!"))
+	if(L.status_flags & PERMANENTLY_DEAD)
+		to_chat(user, SPAN_DANGER("[L] is already as dead as it's possible to be!"))
+		return TRUE
 
-	if(!do_after(user, 10, INTERRUPT_ALL, BUSY_ICON_HOSTILE) || !user.Adjacent(H))
-		return -1
+	var/mob/living/carbon/human/H = L
+	user.affected_message(L,
+		SPAN_HIGHDANGER("You aim [fired_from] at [L]'s head!"),
+		SPAN_HIGHDANGER("[user] aims [fired_from] directly at your head!"),
+		SPAN_DANGER("[user] aims [fired_from] at [L]'s head!"))
+
+	user.next_move += 1.1 SECONDS //PB has no click delay; readding it here to prevent people accidentally queuing up multiple executions.
+
+	if(!do_after(user, 1 SECONDS, INTERRUPT_ALL, BUSY_ICON_HOSTILE) || !user.Adjacent(H))
+		return TRUE
 
 	H.apply_damage(damage * 3, BRUTE, "head", no_limb_loss = TRUE, permanent_kill = TRUE) //Apply gobs of damage and make sure they can't be revived later...
 	H.apply_damage(200, OXY) //...fill out the rest of their health bar with oxyloss...
@@ -390,7 +400,7 @@
 
 	H.update_headshot_overlay(headshot_state) //...and add a gory headshot overlay.
 
-	H.visible_message(SPAN_DANGER("[M] WAS EXECUTED!"), \
+	H.visible_message(SPAN_HIGHDANGER(uppertext("[L] WAS EXECUTED!")), \
 		SPAN_HIGHDANGER("You were executed!"))
 
 	user.count_niche_stat(STATISTICS_NICHE_EXECUTION, 1, P.weapon_cause_data?.cause_name)
@@ -656,19 +666,31 @@
 /datum/ammo/bullet/revolver/mateba/highimpact/on_hit_mob(mob/M, obj/item/projectile/P)
 	knockback(M, P, 4)
 
-/datum/ammo/bullet/revolver/mateba/highimpact/on_pointblank(mob/M, obj/item/projectile/P, mob/living/user) //Special effects when pointblanking mobs.
-	if(!user || !isHumanStrict(M) || user.zone_selected != "head" || user.a_intent != INTENT_HARM)
-		return ..()
+/datum/ammo/bullet/revolver/mateba/highimpact/on_pointblank(mob/living/L, obj/item/projectile/P, mob/living/user, obj/item/weapon/gun/revolver/fired_from)
+	if(!user || L == user || user.zone_selected != "head" || user.a_intent != INTENT_HARM || !isHumanStrict(L))
+		return
 
 	if(!skillcheck(user, SKILL_LEADERSHIP, SKILL_LEAD_MASTER) || !skillcheck(user, SKILL_POLICE, SKILL_POLICE_SKILLED))
 		to_chat(user, SPAN_DANGER("You don't know how to execute someone correctly."))
-		return ..()
+		fired_from.delete_bullet(P, TRUE)
+		return TRUE
 
-	var/mob/living/carbon/human/H = M
-	user.visible_message(SPAN_DANGER("[user] aims at [M]'s head!"), SPAN_HIGHDANGER("You aim at [M]'s head!"))
+	if(L.status_flags & PERMANENTLY_DEAD)
+		to_chat(user, SPAN_DANGER("[L] is already as dead as it's possible to be!"))
+		fired_from.delete_bullet(P, TRUE)
+		return TRUE
 
-	if(!do_after(user, 10, INTERRUPT_ALL, BUSY_ICON_HOSTILE) || !user.Adjacent(H))
-		return -1
+	var/mob/living/carbon/human/H = L
+	user.affected_message(L,
+		SPAN_HIGHDANGER("You aim [fired_from] at [L]'s head!"),
+		SPAN_HIGHDANGER("[user] aims [fired_from] directly at your head!"),
+		SPAN_DANGER("[user] aims [fired_from] at [L]'s head!"))
+
+	user.next_move += 1.1 SECONDS //PB has no click delay; readding it here to prevent people accidentally queuing up multiple executions.
+
+	if(!do_after(user, 1 SECONDS, INTERRUPT_ALL, BUSY_ICON_HOSTILE) || !user.Adjacent(H))
+		fired_from.delete_bullet(P, TRUE)
+		return TRUE
 
 	H.apply_damage(damage * 3, BRUTE, "head", no_limb_loss = TRUE, permanent_kill = TRUE) //Apply gobs of damage and make sure they can't be revived later...
 	H.apply_damage(200, OXY) //...fill out the rest of their health bar with oxyloss...
@@ -676,7 +698,7 @@
 
 	H.update_headshot_overlay(headshot_state) //...and add a gory headshot overlay.
 
-	H.visible_message(SPAN_HIGHDANGER("[M] WAS EXECUTED!"), \
+	H.visible_message(SPAN_HIGHDANGER(uppertext("[L] WAS EXECUTED!")), \
 		SPAN_HIGHDANGER("You were executed!"))
 
 	user.count_niche_stat(STATISTICS_NICHE_EXECUTION, 1, P.weapon_cause_data?.cause_name)
@@ -781,7 +803,7 @@
 	shell_speed = AMMO_SPEED_TIER_4
 
 
-/datum/ammo/bullet/smg/nail/on_pointblank(mob/living/L, obj/item/projectile/P, mob/living/user) //Special effects when pointblanking mobs.
+/datum/ammo/bullet/smg/nail/on_pointblank(mob/living/L, obj/item/projectile/P, mob/living/user, obj/item/weapon/gun/fired_from)
 	if(!L || L == P.firer || L.lying)
 		return
 
@@ -1600,12 +1622,18 @@
 
 /datum/ammo/bullet/machinegun //Adding this for the MG Nests (~Art)
 	name = "machinegun bullet"
-	icon_state 	= "bullet" // Keeping it bog standard with the turret but allows it to be changed. Had to remove IFF so you have to watch out.
+	icon_state 	= "bullet" // Keeping it bog standard with the turret but allows it to be changed
 
 	accurate_range = 12
 	damage = 35
 	penetration= ARMOR_PENETRATION_TIER_10 //Bumped the penetration to serve a different role from sentries, MGs are a bit more offensive
 	accuracy = HIT_ACCURACY_TIER_3
+
+/datum/ammo/bullet/machinegun/set_bullet_traits()
+	. = ..()
+	LAZYADD(traits_to_give, list(
+		BULLET_TRAIT_ENTRY(/datum/element/bullet_trait_iff)
+	))
 
 /datum/ammo/bullet/machinegun/auto // for M2C, automatic variant for M56D, stats for bullet should always be moderately overtuned to fulfill its ultra-offense + flank-push purpose
 	name = "heavy machinegun bullet"
@@ -1618,6 +1646,9 @@
 	max_range = 14
 	effective_range_max = 7
 	damage_falloff = DAMAGE_FALLOFF_TIER_7
+
+/datum/ammo/bullet/machinegun/auto/set_bullet_traits()
+	return
 
 /datum/ammo/bullet/minigun
 	name = "minigun bullet"
