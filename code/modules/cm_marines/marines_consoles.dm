@@ -413,7 +413,6 @@
 	else
 		..()
 
-
 /obj/structure/machinery/computer/card/attack_remote(var/mob/user as mob)
 	return attack_hand(user)
 
@@ -484,6 +483,24 @@
 	req_access = list(ACCESS_MARINE_LOGISTICS)
 	var/obj/item/card/id/ID_to_modify = null
 	var/mob/living/carbon/human/person_to_modify = null
+
+/obj/structure/machinery/computer/squad_changer/verb/eject_id()
+	set category = "Object"
+	set name = "Eject ID Card"
+	set src in view(1)
+
+	if(!usr || usr.stat || usr.lying)	return
+
+	if(ishuman(usr) && ID_to_modify)
+		to_chat(usr, "You remove \the [ID_to_modify] from \the [src].")
+		ID_to_modify.forceMove(get_turf(src))
+		if(!usr.get_active_hand() && istype(usr,/mob/living/carbon/human))
+			usr.put_in_hands(ID_to_modify)
+		ID_to_modify = null
+		person_to_modify = null
+	else
+		to_chat(usr, "There is nothing to remove from \the [src].")
+	return
 
 /obj/structure/machinery/computer/squad_changer/tgui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -848,9 +865,6 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 		// Predators
 		if(isYautja(H))
 			continue
-		// Survivors can't be found at ground (until we code remote access to local systems for Almayer)
-		if(H.faction == FACTION_SURVIVOR && is_ground_level(H.loc.z))
-			continue
 		// Check for a uniform
 		var/obj/item/clothing/under/C = H.w_uniform
 		if(!C || !istype(C))
@@ -861,6 +875,11 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 
 		// Check if z-level is correct
 		var/turf/pos = get_turf(H)
+		if(!pos)
+			continue
+		// Survivors can't be found at ground (until we code remote access to local systems for Almayer)
+		if(H.faction == FACTION_SURVIVOR && is_ground_level(pos.z))
+			continue
 
 		// The entry for this human
 		var/list/entry = list(
@@ -890,7 +909,7 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			)
 
 		// Location
-		if (pos && (C.sensor_mode >= SENSOR_COORDS))
+		if (C.sensor_mode >= SENSOR_COORDS)
 			if(is_mainship_level(pos.z))
 				entry["side"] = "Almayer"
 			var/area/A = get_area(H)
