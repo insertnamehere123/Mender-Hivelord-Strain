@@ -250,19 +250,21 @@
 	spawn(5)
 		cell_explosion(impact, 450, 100, EXPLOSION_FALLOFF_SHAPE_EXPONENTIAL, null, create_cause_data(initial(name), source_mob)) //Insane fall off combined with insane damage makes the Keeper useful for single targets, but very bad against multiple.
 		qdel(src)
+
 /obj/structure/ship_ammo/rocket/harpoon
 	name = "\improper AGM-84 'Harpoon'"
-	desc = "THe AGM-84 Harpoon is an Anti-Ship Missile Was designed and used to effectively take down enemy ships with huge blast wave but low explosive power, this one is modified to use ground signals."
+	desc = "The AGM-84 Harpoon is an Anti-Ship Missile, designed and used to effectively take down enemy ships with a huge blast wave with low explosive power. This one is modified to use ground signals."
 	icon_state = "harpoon"
 	ammo_id = "s"
 	travelling_time = 60
 	point_cost = 700
 	fire_mission_delay = 4
+
 //Looks kinda OP but all it can actually do is just to blow windows and some of other things out, cant do much damage.
 /obj/structure/ship_ammo/rocket/harpoon/detonate_on(turf/impact)
 	impact.ceiling_debris_check(3)
 	spawn(5)
-		cell_explosion(impact, 150, 10, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+		cell_explosion(impact, 200, 16, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 		qdel(src)
 
 
@@ -335,11 +337,11 @@
 		fire_spread(impact, create_cause_data(initial(name), source_mob), 3, 25, 20, "#EE6515")
 
 /obj/structure/ship_ammo/minirocket/flare
-    name = "Minirocket stack of flares"
-    desc = "A pack of laser guided flare minirockets"
+    name = "minirocket flare stack"
+    desc = "A pack of laser guided flare minirockets."
     icon_state = "minirocket_flr"
     point_cost = 150
-    fire_mission_delay = 4 //we dont need a low cooldown because flares are emiting light
+    fire_mission_delay = 4 //we dont need a low cooldown because flares are emiting light, not explosion heh.
 
 /obj/structure/ship_ammo/minirocket/flare/detonate_on(turf/impact)
     impact.ceiling_debris_check(2)
