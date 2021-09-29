@@ -434,6 +434,9 @@ IN_USE						used for vending/denying
 		add_fingerprint(usr)
 		ui_interact(usr) //updates the nanoUI window
 
+/obj/structure/machinery/cm_vending/proc/handle_topic(mob/user, href, href_list)
+	return
+
 /obj/structure/machinery/cm_vending/proc/vend_succesfully()
 	return
 
@@ -461,20 +464,19 @@ IN_USE						used for vending/denying
 /obj/structure/machinery/cm_vending/gear/Topic(href, href_list)
 	. = ..()
 	if(.)
-		return
-	if(stat & (BROKEN|NOPOWER))
-		return
-	if(usr.is_mob_incapacitated())
-		return
+		return TRUE
 
-	if(in_range(src, usr) && isturf(loc) && ishuman(usr))
-		usr.set_interaction(src)
+	handle_topic(usr, href, href_list)
+
+/obj/structure/machinery/cm_vending/gear/handle_topic(mob/user, href, href_list)
+	if(in_range(src, user) && isturf(loc) && ishuman(user))
+		user.set_interaction(src)
 		if(href_list["vend"])
 
 			if(stat & IN_USE)
 				return
 
-			var/mob/living/carbon/human/H = usr
+			var/mob/living/carbon/human/H = user
 
 			if(!hacked)
 				if(!allowed(H))
@@ -501,7 +503,7 @@ IN_USE						used for vending/denying
 			var/idx=text2num(href_list["vend"])
 			var/list/L = listed_products[idx]
 
-			if((!H.assigned_squad && squad_tag) || (squad_tag && H.assigned_squad.name != squad_tag))
+			if((!H.assigned_squad && squad_tag) || (!H.assigned_squad?.omni_squad_vendor && (squad_tag && H.assigned_squad.name != squad_tag)))
 				to_chat(H, SPAN_WARNING("This machine isn't for your squad."))
 				vend_fail()
 				return
@@ -552,8 +554,8 @@ IN_USE						used for vending/denying
 
 			vend_succesfully(L, H, T)
 
-		add_fingerprint(usr)
-		ui_interact(usr) //updates the nanoUI window
+		add_fingerprint(user)
+		ui_interact(user) //updates the nanoUI window
 
 /obj/structure/machinery/cm_vending/gear/proc/handle_points(var/mob/living/carbon/human/H, var/list/L)
 	. = TRUE
@@ -620,19 +622,18 @@ IN_USE						used for vending/denying
 	. = ..()
 	if(.)
 		return
-	if(stat & (BROKEN|NOPOWER))
-		return
-	if(usr.is_mob_incapacitated())
-		return
 
-	if(in_range(src, usr) && isturf(loc) && ishuman(usr))
-		usr.set_interaction(src)
+	handle_topic(usr, href, href_list)
+
+/obj/structure/machinery/cm_vending/clothing/handle_topic(mob/user, href, href_list)
+	if(in_range(src, user) && isturf(loc) && ishuman(user))
+		user.set_interaction(src)
 		if(href_list["vend"])
 
 			if(stat & IN_USE)
 				return
 
-			var/mob/living/carbon/human/H = usr
+			var/mob/living/carbon/human/H = user
 
 			if(!hacked)
 
@@ -661,7 +662,7 @@ IN_USE						used for vending/denying
 			var/list/L = listed_products[idx]
 			var/cost = L[2]
 
-			if((!H.assigned_squad && squad_tag) || (squad_tag && H.assigned_squad.name != squad_tag))
+			if((!H.assigned_squad && squad_tag) || (!H.assigned_squad?.omni_squad_vendor && (squad_tag && H.assigned_squad.name != squad_tag)))
 				to_chat(H, SPAN_WARNING("This machine isn't for your squad."))
 				vend_fail()
 				return
@@ -704,8 +705,8 @@ IN_USE						used for vending/denying
 
 			vend_succesfully(L, H, T)
 
-		add_fingerprint(usr)
-		ui_interact(usr) //updates the nanoUI window
+		add_fingerprint(user)
+		ui_interact(user) //updates the nanoUI window
 
 /obj/structure/machinery/cm_vending/clothing/vend_succesfully(var/list/L, var/mob/living/carbon/human/H, var/turf/T)
 	if(stat & IN_USE)
@@ -816,21 +817,18 @@ IN_USE						used for vending/denying
 
 /obj/structure/machinery/cm_vending/sorted/Topic(href, href_list)
 	. = ..()
-	if(.)
-		return
-	if(inoperable())
-		return
-	if(usr.is_mob_incapacitated())
-		return
 
-	if(in_range(src, usr) && isturf(loc) && ishuman(usr))
-		usr.set_interaction(src)
+	handle_topic(usr, href, href_list)
+
+/obj/structure/machinery/cm_vending/sorted/handle_topic(mob/user, href, href_list)
+	if(in_range(src, user) && isturf(loc) && ishuman(user))
+		user.set_interaction(src)
 		if(href_list["vend"])
 
 			if(stat & IN_USE)
 				return
 
-			var/mob/living/carbon/human/H = usr
+			var/mob/living/carbon/human/H = user
 
 			if(!hacked)
 
@@ -871,8 +869,8 @@ IN_USE						used for vending/denying
 
 			vend_succesfully(L, H, T)
 
-		add_fingerprint(usr)
-		ui_interact(usr) //updates the nanoUI window
+		add_fingerprint(user)
+		ui_interact(user) //updates the nanoUI window
 
 /obj/structure/machinery/cm_vending/sorted/vend_succesfully(var/list/L, var/mob/living/carbon/human/H, var/turf/T)
 	if(stat & IN_USE)
@@ -993,7 +991,7 @@ IN_USE						used for vending/denying
 			var/list/L = listed_products[idx]
 			var/cost = L[2]
 
-			if((!H.assigned_squad && squad_tag) || (squad_tag && H.assigned_squad.name != squad_tag))
+			if((!H.assigned_squad && squad_tag) || (!H.assigned_squad?.omni_squad_vendor && (squad_tag && H.assigned_squad.name != squad_tag)))
 				to_chat(H, SPAN_WARNING("This machine isn't for your squad."))
 				vend_fail()
 				return
