@@ -1,6 +1,5 @@
 
 
-
 //////////////////////////////////// dropship weapon ammunition ////////////////////////////
 
 /obj/structure/ship_ammo
@@ -280,7 +279,7 @@
 		T = locate(impact.x+coords[1],impact.y+coords[2],impact.z)
 		T.ceiling_debris_check(2)
 		spawn(5)
-			cell_explosion(T,150, 45, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)))
+			cell_explosion(T,150, 45, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 	qdel(src)
 
 /obj/structure/ship_ammo/rocket/harpoon
