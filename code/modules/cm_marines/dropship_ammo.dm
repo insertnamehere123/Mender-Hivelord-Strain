@@ -335,7 +335,7 @@
 		spawn(5)
 			cell_explosion(impact, 150, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 			fire_spread(impact, create_cause_data(initial(name), source_mob), 4, 60, 40, "#EE6515")
-	qdel(src)
+		qdel(src)
 
 
 
