@@ -318,7 +318,7 @@
 	fire_mission_delay = 0 //0 means unusable
 
 /obj/structure/ship_ammo/rocket/napalm/detonate_on(turf/impact)
-	  	if(impact && CEILING_IS_PROTECTED(A?.ceiling, CEILING_PROTECTION_TIER_3) && protected_by_pylon(TURF_PROTECTION_CAS, impact)
+	  	if(impact && CEILING_IS_PROTECTED(A?.ceiling, CEILING_PROTECTION_TIER_3) && protected_by_pylon(TURF_PROTECTION_CAS, impact))
 			var/list/turf_list = list()
 			for(var/turf/T in range(impact, 7)) //This is its area of effect
 			turf_list += T
