@@ -327,15 +327,18 @@
 		  		for(var/i=1 to 26) //This is how many tiles within that area of effect will be randomly ignited on instant
 					var/turf/U = pick(turf_list)
 					turf_list -= U
-					fire_spread(U, create_cause_data(initial(name), source_mob), 4, 30, 25, "#EE6515")
+					spawn(5)
+						fire_spread(U, create_cause_data(initial(name), source_mob), 4, 30, 25, "#EE6515")
 				qdel(src)
 		impact.ceiling_debris_check(2)
-			cell_explosion(impact, 150, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-			fire_spread(impact, create_cause_data(initial(name), source_mob), 4, 30, 30, "#EE6515")
+			spawn(5)
+				cell_explosion(impact, 150, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+				fire_spread(impact, create_cause_data(initial(name), source_mob), 4, 30, 30, "#EE6515")
 			qdel(src)
 		impact.ceiling_debris_check(1)
-			cell_explosion(impact, 200, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-			fire_spread(impact, create_cause_data(initial(name), source_mob), 6, 60, 30, "#EE6515")
+			spawn(5)
+				cell_explosion(impact, 200, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+				fire_spread(impact, create_cause_data(initial(name), source_mob), 6, 60, 30, "#EE6515")
 		qdel(src)
 
 
