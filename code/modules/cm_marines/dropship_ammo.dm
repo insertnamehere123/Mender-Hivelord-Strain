@@ -299,14 +299,14 @@
 	var/list/coords
 	var/list/P
 	for(var/i=1 to 3)
+		sleep(10)
 		P = expower[i]
 		coords = impact_coords[i]
 		T = locate(impact.x+coords[1],impact.y+coords[2])
 		T.ceiling_debris_check(2)
 		spawn(5)
-				cell_explosion(T, P, 45, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-			sleep(10)
-			qdel(src)
+			cell_explosion(T, P, 45, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+	qdel(src)
 
 
 /obj/structure/ship_ammo/rocket/napalm
