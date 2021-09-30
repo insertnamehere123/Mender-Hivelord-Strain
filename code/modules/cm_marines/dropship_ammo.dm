@@ -254,6 +254,62 @@
 		cell_explosion(impact, 450, 100, EXPLOSION_FALLOFF_SHAPE_EXPONENTIAL, null, create_cause_data(initial(name), source_mob)) //Insane fall off combined with insane damage makes the Keeper useful for single targets, but very bad against multiple.
 		qdel(src)
 
+/obj/structure/ship_ammo/rocket/fatty
+	name = "\improper SM-17 'Fatty'"
+	desc = "The SM-17 'Fatty' is a cluster-bomb type ordnance that only requires laser-guidance when first launched."
+	icon_state = "fatty"
+	ammo_id = "f"
+	travelling_time = 80 //even slower and less deadly accurate.
+	max_inaccuracy = 3
+	point_cost = 800
+	fire_mission_delay = 0 //0 means unusable
+	warning_sound = 'sound/weapons/gun_mortar_travel.ogg'
+	warning_sound_volume = 100
+
+/obj/structure/ship_ammo/rocket/fatty/detonate_on(turf/impact)
+	set waitfor = 0
+	impact.ceiling_debris_check(2)
+	spawn(5)
+		cell_explosion(impact,200, 44, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)) //first explosion is small to trick xenos into thinking its a minirocket.
+	sleep(25)
+	var/list/impact_coords = list(list(-3,3),list(0,4),list(3,3),list(-3,-3),list(0,-4), list(3,-3))
+	var/turf/T
+	var/list/coords
+	for(var/i=1 to 6)
+		coords = impact_coords[i]
+		T = locate(impact.x+coords[1],impact.y+coords[2],impact.z)
+		T.ceiling_debris_check(2)
+		spawn(5)
+			cell_explosion(T,150, 45, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)))
+	qdel(src)
+
+/obj/structure/ship_ammo/rocket/harpoon
+	name = "\improper AGM-84 'Harpoon'"
+	desc = "The AGM-84 Harpoon is an Anti-Ship multi-sectioned missile used to effectively take down enemy ships, made out of 3 sections, each with explosive payload. Powerfull missle which is accurate by it self, but cluster sections is deadly inaccurate. "
+	icon_state = "harpoon"
+	ammo_id = "s"
+	point_cost = 500
+	max_inaccuracy = 2
+	fire_mission_delay = 4
+
+/obj/structure/ship_ammo/rocket/harpoon/detonate_on(turf/impact)
+	impact.ceiling_debris_check(3)
+	var/list/impact_coords = list(list(5,3),list(-2,5),list(1,-5))
+	var/turf/T
+	var/list/expower - list(list(300),list(200),list(250))
+	var/list/coords
+	var/list/P
+	for(var/i=1 to 3)
+		P = expower[i]
+		coords = impact_coords[i]
+		T = locate(impact.x+coords[1],impact.y+coords[2])
+		T.ceiling_debris_check(2)
+		spawn(5)
+				cell_explosion(T, expower, 45 EXPLOSION_FALLOFF_SHAPE_LINEAR, null)
+			sleep(10)
+			qdel(src)
+
+
 /obj/structure/ship_ammo/rocket/napalm
 	name = "\improper XN-99 'Napalm'"
 	desc = "The XN-99 'Napalm' is an incendiary missile  used to turn specific targeted areas into giant balls of fire for a long time."
@@ -263,10 +319,24 @@
 	fire_mission_delay = 0 //0 means unusable
 
 /obj/structure/ship_ammo/rocket/napalm/detonate_on(turf/impact)
-	impact.ceiling_debris_check(3)
+	var/list/turf_list = list()
+	for(var/turf/T in range(impact, 7)) //This is its area of effect
+		turf_list += T
 	spawn(5)
-		cell_explosion(impact, 200, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-		fire_spread(impact, create_cause_data(initial(name), source_mob), 6, 60, 30, "#EE6515") //Color changed into napalm's color to better convey how intense the fire actually is.
+	  	impact.ceiling_debris_check(3)
+		  	for(var/i=1 to 26) //This is how many tiles within that area of effect will be randomly ignited on instant
+				var/turf/U = pick(turf_list)
+				turf_list -= U
+				cell_explosion(U, 100, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+				fire_spread(impact, create_cause_data(initial(name), source_mob), 4, 30, 25, "#EE6515")
+			qdel(src)
+		impact.ceiling_debris_check(2)
+			cell_explosion(impact, 150, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+			fire_spread(impact, create_cause_data(initial(name), source_mob), 4, 30, 30, "#EE6515")
+			qdel(src)
+		impact.ceiling_debris_check(1)
+			cell_explosion(impact, 200, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+			fire_spread(impact, create_cause_data(initial(name), source_mob), 6, 60, 30, "#EE6515")
 		qdel(src)
 
 
@@ -321,3 +391,38 @@
 	..()
 	spawn(5)
 		fire_spread(impact, create_cause_data(initial(name), source_mob), 3, 25, 20, "#EE6515")
+
+/obj/structure/ship_ammo/minirocket/flare
+	name = "mini rocket flare stack"
+	desc = "A pack of laser guided flare minirockets"
+	icon_state = "minirocket_flr"
+	point_cost = 150
+	fire_mission_delay = 3
+
+/obj/structure/ship_ammo/minirocket/flare/detonate_on(turf/impact)
+    impact.ceiling_debris_check(2)
+    spawn(5)
+		cell_explosion(impact, 10, 5, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+        new /obj/item/device/flashlight/flare/on/illumination(impact)
+        if(!ammo_count && loc)
+			qdel(src)
+
+/obj/structure/ship_ammo/minirocket/smoke
+	name = "Mini rocket smoke stack"
+	desc = "A pack of laser guided smoke mini rockets"
+	icon_state = "minirocket_smk"
+	point_cost = 200
+	fire_mission_delay = 3
+
+/obj/structure/ship_ammo/minirocket/smoke/detonate_on(turf/impact)
+	impact.ceiling_debris_check(2)
+	spawn(5)
+		cell_explosion(impact, 10, 5, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+		var/datum/effect_system/smoke_spread/S = new/datum/effect_system/smoke_spread()
+		S.set_up(5,0,impact,null,30)
+		S.start
+		if(!ammo_count && loc)
+			qdel(src)
+
+
+            qdel(src)
