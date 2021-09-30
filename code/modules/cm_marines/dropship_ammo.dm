@@ -295,7 +295,7 @@
 	impact.ceiling_debris_check(3)
 	var/list/impact_coords = list(list(5,3),list(-2,5),list(1,-5))
 	var/turf/T
-	var/list/expower - list(list(300),list(200),list(250))
+	var/list/expower = list(list(300),list(200),list(250))
 	var/list/coords
 	var/list/P
 	for(var/i=1 to 3)
@@ -304,7 +304,7 @@
 		T = locate(impact.x+coords[1],impact.y+coords[2])
 		T.ceiling_debris_check(2)
 		spawn(5)
-				cell_explosion(T, expower, 45 EXPLOSION_FALLOFF_SHAPE_LINEAR, null)
+				cell_explosion(T, P, 45 EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 			sleep(10)
 			qdel(src)
 
