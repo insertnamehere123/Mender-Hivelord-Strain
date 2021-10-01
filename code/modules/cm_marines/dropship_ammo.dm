@@ -321,7 +321,7 @@
 	var/list/turf_list = list()
 	for(var/turf/T in range(impact, 7)) //This is its area of effect
 		turf_list += T
-	if(impact && CEILING_IS_PROTECTED(CEILING_PROTECTION_TIER_3) && protected_by_pylon(TURF_PROTECTION_CAS, impact))
+	if(impact && CEILING_IS_PROTECTED(A?.ceiling, CEILING_PROTECTION_TIER_3) && protected_by_pylon(TURF_PROTECTION_CAS, impact))
 		spawn(5)
 			cell_explosion(impact, 100, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 		for(var/i=1 to 26) //This is how many tiles within that area of effect will be randomly ignited on instant
@@ -398,9 +398,9 @@
 
 /obj/structure/ship_ammo/minirocket/flare/detonate_on(turf/impact)
     impact.ceiling_debris_check(2)
-    spawn(5)
+	new /obj/item/device/flashlight/flare/on/illumination(impact)
+	spawn(5)
 		cell_explosion(impact, 10, 5, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-    new /obj/item/device/flashlight/flare/on/illumination(impact)
     if(!ammo_count && loc)
 		qdel(src)
 
