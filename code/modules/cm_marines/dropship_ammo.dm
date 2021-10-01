@@ -318,7 +318,6 @@
 	fire_mission_delay = 0 //0 means unusable
 
 /obj/structure/ship_ammo/rocket/napalm/detonate_on(turf/impact)
-	impact.ceiling_debris_check(1)
 	var/list/turf_list = list()
 	for(var/turf/T in range(impact, 7)) //This is its area of effect
 		turf_list += T
