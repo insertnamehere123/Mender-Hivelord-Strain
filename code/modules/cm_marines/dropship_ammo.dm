@@ -326,7 +326,7 @@
 		spawn(5)
 			cell_explosion(impact, 100, 25, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
 		for(var/i=1 to 26) //This is how many tiles within that area of effect will be randomly ignited on instant
-				var/turf/U = pick(turf_list)
+			var/turf/U = pick(turf_list)
 			turf_list -= U
 				spawn(5)
 					fire_spread(U, create_cause_data(initial(name), source_mob), 4, 30, 25, "#EE6515")
@@ -401,9 +401,9 @@
     impact.ceiling_debris_check(2)
     spawn(5)
 		cell_explosion(impact, 10, 5, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-        new /obj/item/device/flashlight/flare/on/illumination(impact)
-        if(!ammo_count && loc)
-			qdel(src)
+    new /obj/item/device/flashlight/flare/on/illumination(impact)
+    if(!ammo_count && loc)
+		qdel(src)
 
 /obj/structure/ship_ammo/minirocket/smoke
 	name = "Mini rocket smoke stack"
@@ -421,6 +421,4 @@
 		S.start
 	if(!ammo_count && loc)
 		qdel(src)
-
-
             qdel(src)
