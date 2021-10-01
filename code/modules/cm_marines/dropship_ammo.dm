@@ -416,10 +416,9 @@
 	impact.ceiling_debris_check(2)
 	spawn(5)
 		cell_explosion(impact, 10, 5, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
-		spawn(5)
-			var/datum/effect_system/smoke_spread/S = new/datum/effect_system/smoke_spread()
-			S.set_up(5,0,impact,null,30)
-			S.start
+		var/datum/effect_system/smoke_spread/S = new/datum/effect_system/smoke_spread()
+		S.set_up(5,0,impact,null,30)
+		S.start
 	if(!ammo_count && loc)
-			qdel(src)
-
+		qdel(src)
+            qdel(src)
