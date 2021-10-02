@@ -1,4 +1,3 @@
-
 //////////////////////////////////// dropship weapon ammunition ////////////////////////////
 
 /obj/structure/ship_ammo
@@ -318,4 +317,4 @@
 /obj/structure/ship_ammo/minirocket/incendiary/detonate_on(turf/impact)
 	..()
 	spawn(5)
-
+		fire_spread(impact, create_cause_data(initial(name), source_mob), 3, 25, 20, "#EE6515")
