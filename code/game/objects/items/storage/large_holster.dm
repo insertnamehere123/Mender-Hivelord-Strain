@@ -245,6 +245,10 @@
 	F.current_mag = active_fuel
 	//sets pressure for custom tanks
 	F.fuel_pressure = active_fuel.fuel_pressure
+	if(istype(F.current_mag, /obj/item/ammo_magazine/flamer_tank/custom))
+		F.verbs |= /obj/item/weapon/gun/flamer/proc/set_fuel_pressure
+	else
+		F.verbs -= /obj/item/weapon/gun/flamer/proc/set_fuel_pressure
 	F.update_icon()
 
 	return TRUE
