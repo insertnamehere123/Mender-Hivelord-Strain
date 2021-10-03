@@ -75,17 +75,19 @@
 	if(get_dist(user,target) > 1)
 		return ..()
 
-	var/obj/O = target
-	if(!O.reagents || O.reagents.reagent_list.len < 1)
-		to_chat(user, SPAN_WARNING("[O] is empty!"))
+	fill_from_target(target, user)
+
+/obj/item/ammo_magazine/flamer_tank/proc/fill_from_target(obj/target, mob/user)
+	if(!target.reagents || target.reagents.reagent_list.len < 1)
+		to_chat(user, SPAN_WARNING("[target] is empty!"))
 		return
 
 	if(!reagents)
 		create_reagents(max_rounds)
 
-	var/datum/reagent/to_add = O.reagents.reagent_list[1]
+	var/datum/reagent/to_add = target.reagents.reagent_list[1]
 
-	if(!istype(to_add) || (length(reagents.reagent_list) && flamer_chem != to_add.id) || length(O.reagents.reagent_list) > 1)
+	if(!istype(to_add) || (length(reagents.reagent_list) && flamer_chem != to_add.id) || length(target.reagents.reagent_list) > 1)
 		to_chat(user, SPAN_WARNING("You can't mix fuel mixtures!"))
 		return
 
@@ -95,12 +97,12 @@
 
 	var/fuel_amt_to_remove = Clamp(to_add.volume, 0, max_rounds - reagents.get_reagent_amount(to_add.id))
 	if(!fuel_amt_to_remove)
-		to_chat(user, SPAN_WARNING("[O] is empty!"))
+		to_chat(user, SPAN_WARNING("[target] is empty!"))
 		return
 
-	O.reagents.remove_reagent(to_add.id, fuel_amt_to_remove)
+	target.reagents.remove_reagent(to_add.id, fuel_amt_to_remove)
 	reagents.add_reagent(to_add.id, fuel_amt_to_remove)
-	playsound(loc, 'sound/effects/refill.ogg', 25, 1, 3)
+	playsound(user.loc, 'sound/effects/refill.ogg', 25, 1, 3)
 	caliber = to_add.name
 	flamer_chem = to_add.id
 
@@ -144,21 +146,27 @@
 	max_range = 5
 	fuel_pressure = 1
 
-/obj/item/ammo_magazine/flamer_tank/custom/verb/set_fuel_pressure()
+/obj/item/ammo_magazine/flamer_tank/custom/verb/set_fuel_pressure_verb()
 	set name = "Change Fuel Pressure"
 	set category = "Object"
-
 	set src in usr
 
-	if(usr.get_active_hand() != src)
+	set_fuel_pressure(usr, src)
+
+/obj/item/ammo_magazine/flamer_tank/custom/proc/set_fuel_pressure(var/mob/user, var/obj/item/held_item)
+	if(user.get_active_hand() != held_item)
+		to_chat(user, SPAN_WARNING("\The [held_item] must be in your active hand to set the fuel pressure!"))
 		return
 
-	var/set_pressure = Clamp(input("Change fuel pressure to: (max: [max_pressure])", 10, fuel_pressure) as num|null,1,max_pressure)
+	var/set_pressure = Clamp(input(user, "Change fuel pressure to: (max: [max_pressure])", "Set Fuel Pressure", fuel_pressure) as num|null, 1, max_pressure)
+	if(user.get_active_hand() != held_item)
+		to_chat(user, SPAN_WARNING("\The [held_item] must be in your active hand to set the fuel pressure!"))
+		return
 	if(!set_pressure)
 		to_chat(usr, SPAN_WARNING("You can't find that setting on the regulator!"))
-	else
-		to_chat(usr, SPAN_NOTICE("You set the pressure regulator to [set_pressure] U/t"))
-		fuel_pressure = set_pressure
+		return
+	to_chat(usr, SPAN_NOTICE("You set the pressure regulator to [set_pressure] U/t"))
+	fuel_pressure = set_pressure
 
 /obj/item/ammo_magazine/flamer_tank/custom/examine(mob/user)
 	..()

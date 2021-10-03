@@ -89,6 +89,17 @@
 					 'sound/weapons/gun_flamethrower3.ogg')
 	return pick(fire_sounds)
 
+/obj/item/weapon/gun/flamer/afterattack(atom/A, mob/living/user, flag, params)
+	if(flag && istype(A, /obj/structure/reagent_dispensers))
+		if(!istype(current_mag, /obj/item/ammo_magazine/flamer_tank/custom))
+			to_chat(user, SPAN_WARNING("You can only directly refill custom fuel tanks!"))
+			return
+		var/obj/item/ammo_magazine/flamer_tank/custom/CFT = current_mag
+		CFT.fill_from_target(A, user)
+		update_icon()
+		return
+	return ..()
+
 /obj/item/weapon/gun/flamer/Fire(atom/target, mob/living/user, params, reflex)
 	set waitfor = 0
 	if(!able_to_fire(user))
@@ -167,6 +178,8 @@
 			replace_ammo(,magazine)
 	var/obj/item/ammo_magazine/flamer_tank/tank = magazine
 	fuel_pressure = tank.fuel_pressure
+	if(istype(tank, /obj/item/ammo_magazine/flamer_tank/custom))
+		verbs |= /obj/item/weapon/gun/flamer/proc/set_fuel_pressure
 	update_icon()
 	return 1
 
@@ -185,9 +198,19 @@
 
 	current_mag.update_icon()
 	current_mag = null
+	verbs -= /obj/item/weapon/gun/flamer/proc/set_fuel_pressure
 	fuel_pressure = 1
 
 	update_icon()
+
+/obj/item/weapon/gun/flamer/proc/set_fuel_pressure()
+	set name = "Change Fuel Pressure"
+	set category = "Object"
+	set src in usr
+
+	var/obj/item/ammo_magazine/flamer_tank/custom/CFT = current_mag // not checking if current_mag exists here because it SHOULD runtime if we have this proc and no mag
+	CFT.set_fuel_pressure(usr, src)
+	fuel_pressure = CFT.fuel_pressure
 
 /obj/item/weapon/gun/flamer/proc/unleash_flame(atom/target, mob/living/user)
 	set waitfor = 0
