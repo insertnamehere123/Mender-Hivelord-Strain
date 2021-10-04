@@ -474,6 +474,10 @@
 
 
 
+/obj/structure/dropship_equipment/electronics/flare_launcher
+	name = "flare launcher"
+	icon_state = "flare_launcher"
+	point_cost = 0
 
 /obj/structure/dropship_equipment/electronics/targeting_system
 	name = "targeting system"
@@ -521,6 +525,26 @@
 		linked_cam_console.update_static_data(locate(ref))
 
 
+/////////////////////////////////// COMPUTERS //////////////////////////////////////
+
+//unfinished and unused
+/obj/structure/dropship_equipment/adv_comp
+	equip_categories = list(DROPSHIP_COMPUTER)
+	point_cost = 0
+
+/obj/structure/dropship_equipment/adv_comp/update_equipment()
+	if(ship_base)
+		icon_state = "[initial(icon_state)]_installed"
+	else
+		icon_state = initial(icon_state)
+
+
+/obj/structure/dropship_equipment/adv_comp/docking
+	name = "docking computer"
+	icon_state = "docking_comp"
+	point_cost = 0
+
+
 ////////////////////////////////////// WEAPONS ///////////////////////////////////////
 
 /obj/structure/dropship_equipment/weapon
@@ -535,7 +559,6 @@
 	is_interactable = TRUE
 	var/last_fired //used for weapon cooldown after use.
 	var/firing_sound
-
 	var/firing_delay = 20 //delay between firing. 2 seconds by default
 	var/fire_mission_only = TRUE //whether the weapon can only be fire in fly-by mode (sic).
 
@@ -616,7 +639,6 @@
 /obj/structure/dropship_equipment/weapon/proc/open_fire_firemission(obj/selected_target, var/mob/user = usr)
 	set waitfor = 0
 	var/turf/target_turf = get_turf(selected_target)
-	var/obj/structure/ship_ammo/inbound_sound = SA.inbound_sound
 	if(firing_sound)
 		playsound(loc, firing_sound, 70, 1)
 		playsound(target_turf, firing_sound, 70, 1)
@@ -644,7 +666,7 @@
 	name = "\improper GAU-21 30mm cannon"
 	desc = "A dismounted GAU-21 'Rattler' 30mm rotary cannon. It seems to be missing its feed links and has exposed connection wires. Capable of firing 5200 rounds a minute, feared by many for its power. Earned the nickname 'Rattler' from the vibrations it would cause on dropships in its inital production run."
 	icon_state = "30mm_cannon"
-	firing_sound = 'sound/effects/gau_brrt.ogg'
+	firing_sound = 'sound/effects/cannon30.ogg'
 	point_cost = 400
 	fire_mission_only = FALSE
 
@@ -661,7 +683,6 @@
 	icon_state = "rocket_pod"
 	desc = "A missile pod weapon system capable of launching a single laser-guided missile. Moving this will require some sort of lifter."
 	firing_sound = 'sound/weapons/gun_flare_explode.ogg'
-	inbound_sound =  'sound/weapons/gun_flare_explode.ogg'
 	firing_delay = 5
 	point_cost = 600
 

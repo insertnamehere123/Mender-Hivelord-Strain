@@ -23,7 +23,6 @@
 	var/source_mob //who fired it
 
 
-
 /obj/structure/ship_ammo/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/powerloader_clamp))
 		var/obj/item/powerloader_clamp/PC = I
@@ -102,11 +101,20 @@
     for(var/i=1, i<=ammo_used_per_firing, i++)
         var/turf/U = pick(turf_list)
         sleep(1)
-        cell_explosion(U, 150, 150, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob))
+        U.ex_act(EXPLOSION_THRESHOLD_MLOW)
+        for(var/atom/movable/AM in U)
+            if(iscarbon(AM))
+                AM.ex_act(EXPLOSION_THRESHOLD_MLOW, , create_cause_data(initial(name), source_mob))
+            else
+                AM.ex_act(EXPLOSION_THRESHOLD_MLOW)
         if(!soundplaycooldown) //so we don't play the same sound 20 times very fast.
             playsound(U, get_sfx("explosion"), 40, 1, 20)
             soundplaycooldown = 3
         soundplaycooldown--
+        if(!debriscooldown)
+            U.ceiling_debris_check(1)
+            debriscooldown = 6
+        debriscooldown--
         new /obj/effect/particle_effect/expl_particles(U)
 
 
