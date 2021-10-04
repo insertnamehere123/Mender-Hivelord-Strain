@@ -632,7 +632,7 @@
 	if(ammo_warn_sound)
 		playsound(impact, ammo_warn_sound, ammo_warn_sound_volume, 1)
 	new /obj/effect/overlay/temp/blinking_laser (impact)
-	sleep(15)
+	sleep(10)
 	SA.source_mob = user
 	SA.detonate_on(impact)
 
@@ -658,7 +658,7 @@
 	for(var/turf/TU in range(ammo_accuracy_range, target_turf))
 		possible_turfs += TU
 	var/turf/impact = pick(possible_turfs)
-	sleep(3)
+	sleep(8)
 	SA.source_mob = user
 	SA.detonate_on(impact)
 
