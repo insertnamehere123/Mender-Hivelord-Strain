@@ -7,7 +7,7 @@
 		return
 
 	if(undefibbable && stat == DEAD || spawned_corpse)
-		GLOB.data_core.manifest_modify(real_name, null, null, "*Deceased*")
+		GLOB.data_core.manifest_modify(real_name, WEAKREF(src), null, null, "*Deceased*")
 		SShuman.processable_human_list -= src
 		if(hardcore)
 			qdel(src) //We just delete the corpse on WO to keep things simple and lag-free
@@ -28,10 +28,8 @@
 	life_tick++
 
 	if(stat == DEAD && species.name == "Zombie")
-		var/datum/species/zombie/zs = species
-		if(zs.to_revive[src])
-			handle_chemicals_in_body(delta_time)
-			return
+		handle_chemicals_in_body(delta_time)
+		return
 
 	//No need to update all of these procs if the guy is dead.
 	if(!in_stasis)
