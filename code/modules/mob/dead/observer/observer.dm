@@ -827,15 +827,12 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	if(alert("Do you want to go DNR?", "Choose to go DNR", "Yes", "No") == "Yes")
 		can_reenter_corpse = FALSE
-		GLOB.data_core.manifest_modify(name, null, null, "*Deceased*")
+		var/ref
+		var/mob/living/carbon/human/H = mind.original
+		if(istype(H))
+			ref = WEAKREF(H)
+		GLOB.data_core.manifest_modify(name, ref, null, null, "*Deceased*")
 
-/mob/dead/observer/verb/view_stats()
-	set category = "Ghost.View"
-	set name = "View Playtimes"
-	set desc = "View your playtimes."
-
-	if(client && client.player_entity)
-		client.player_data.ui_interact(src)
 
 /mob/dead/observer/verb/view_kill_feed()
 	set category = "Ghost.View"

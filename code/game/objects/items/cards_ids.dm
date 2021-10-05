@@ -65,6 +65,7 @@
 	var/list/faction_group
 
 	var/registered_name = "Unknown" // The name registered_name on the card
+	var/registered_ref = null
 	var/registered_gid = 0
 	flags_equip_slot = SLOT_ID
 
@@ -92,6 +93,10 @@
 	..()
 	user.visible_message("[user] shows you: [icon2html(src, viewers(user))] [name]: assignment: [assignment]")
 	src.add_fingerprint(user)
+
+/obj/item/card/id/proc/set_assignment(var/new_assignment)
+	assignment = new_assignment
+	name = "[registered_name]'s ID Card ([assignment])"
 
 /obj/item/card/id/GetAccess()
 	return access
