@@ -90,11 +90,7 @@
 	return pick(fire_sounds)
 
 /obj/item/weapon/gun/flamer/afterattack(atom/A, mob/living/user, flag, params)
-	// Checks for underbarrel attachments before checking for custom tanks, in case someone's using both.
-	if(active_attachable && (active_attachable.flags_attach_features & ATTACH_MELEE))
-		active_attachable.fire_attachment(A, src, user)
-		return TRUE
-	if(flag && istype(A, /obj/structure/reagent_dispensers))
+	if(flag && !active_attachable && istype(A, /obj/structure/reagent_dispensers))
 		if(!istype(current_mag, /obj/item/ammo_magazine/flamer_tank/custom))
 			to_chat(user, SPAN_WARNING("You can only directly refill custom fuel tanks!"))
 			return
