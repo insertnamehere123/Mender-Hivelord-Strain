@@ -228,6 +228,8 @@
 /obj/item/ammo_magazine/flamer_tank/custom/large
 	name = "large custom incinerator tank"
 	desc = "A large fuel tank for use in the M240-T incinerator unit. This one has been modified with a pressure regulator and a large internal propellant tank."
+	icon_state = "flametank_large_custom"
+	item_state = "flametank_large"
 	gun_type = /obj/item/weapon/gun/flamer/M240T
 	max_rounds = 400
 
