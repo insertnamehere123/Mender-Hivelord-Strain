@@ -1534,7 +1534,7 @@
 	name = "anti-tank sniper bullet"
 
 	accuracy = HIT_ACCURACY_TIER_8
-	damage = 95
+	damage = 125
 	shell_speed = AMMO_SPEED_TIER_6
 
 
@@ -1542,8 +1542,14 @@
 	name = "supersonic sniper bullet"
 
 	accuracy = HIT_ACCURACY_TIER_8
-	damage = 95
-	shell_speed = AMMO_SPEED_TIER_6
+	damage = 125
+	shell_speed = AMMO_SPEED_TIER_6 + AMMO_SPEED_TIER_2
+
+/datum/ammo/bullet/sniper/elite/set_bullet_traits()
+	. = ..()
+	LAZYADD(traits_to_give, list(
+	    BULLET_TRAIT_ENTRY(/datum/element/bullet_trait_penetrating)
+	))
 
 /*
 //======
@@ -1557,7 +1563,7 @@
 	flags_ammo_behavior = AMMO_BALLISTIC
 
 	max_range = 12
-	accuracy = HIT_ACCURACY_TIER_3
+	accuracy = HIT_ACCURACY_TIER_4
 	damage = 30
 	penetration = 0
 
@@ -1566,7 +1572,7 @@
 	icon_state = "bullet"
 
 	accurate_range = 12
-	accuracy = HIT_ACCURACY_TIER_1
+	accuracy = HIT_ACCURACY_TIER_2
 	damage = 20
 	penetration = ARMOR_PENETRATION_TIER_8
 	damage_armor_punch = 1
@@ -2561,8 +2567,8 @@
 /datum/ammo/xeno/bone_chips/on_hit_mob(mob/M, obj/item/projectile/P)
 	if(isHumanStrict(M) || isXeno(M))
 		playsound(M, 'sound/effects/spike_hit.ogg', 25, 1, 1)
-		if(M.slowed < 7)
-			M.AdjustSlowed(6)
+		if(M.slowed < 8)
+			M.Slow(8)
 
 /datum/ammo/xeno/bone_chips/spread
 	name = "small bone chips"
@@ -2587,8 +2593,8 @@
 /datum/ammo/xeno/bone_chips/spread/runner/on_hit_mob(mob/M, obj/item/projectile/P)
     if(isHumanStrict(M) || isXeno(M))
         playsound(M, 'sound/effects/spike_hit.ogg', 25, 1, 1)
-        if(M.slowed < 5)
-            M.AdjustSlowed(4)
+        if(M.slowed < 6)
+            M.Slow(6)
 
 /*
 //======
@@ -2721,6 +2727,7 @@
 	damage = 30
 	penetration= ARMOR_PENETRATION_TIER_10
 	shrapnel_chance = SHRAPNEL_CHANCE_TIER_7
+	shrapnel_type = /obj/item/shard/shrapnel
 
 /datum/ammo/flamethrower
 	name = "flame"
