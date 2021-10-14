@@ -16,7 +16,7 @@
 	var/transferable_ammo = FALSE //whether the ammo inside this magazine can be transfered to another magazine.
 	var/accuracy_range = 3 //how many tiles the ammo can deviate from the laser target
 	var/warning_sound = 'sound/machines/hydraulics_2.ogg' //sound played mere seconds before impact
-	var/warning_sound_volume = 80
+	var/warning_sound_volume = 70
 	var/ammo_used_per_firing = 1
 	var/max_inaccuracy = 6 //what's the max deviation allowed when the ammo is no longer guided by a laser.
 	var/point_cost = 0 //how many points it costs to build this with the fabricator, set to 0 if unbuildable.
