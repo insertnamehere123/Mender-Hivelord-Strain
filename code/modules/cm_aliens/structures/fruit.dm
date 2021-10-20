@@ -142,7 +142,7 @@
 	if(picked)
 		to_chat(X, SPAN_XENODANGER("This fruit is already being picked!"))
 		return
-	if(X.a_intent == INTENT_HELP && X.can_not_harm(bound_xeno))
+	if(X.a_intent != INTENT_HARM && X.can_not_harm(bound_xeno))
 		if(!(flags & CAN_CONSUME_AT_FULL_HEALTH) && X.health >= X.caste.max_health)
 			to_chat(X, SPAN_XENODANGER("You are at full health! This would be a waste..."))
 			return XENO_NO_DELAY_ACTION
@@ -384,7 +384,7 @@
 /obj/effect/alien/resin/fruit/MouseDrop(mob/living/carbon/Xenomorph/user)
 	if(!istype(user))
 		return
-	if(Adjacent(user) && !user.is_mob_incapacitated())
+	if(Adjacent(user) && !user.is_mob_incapacitated() && !user.lying)
 		user.pickup_fruit(src)
 
 // Handles xenos picking up fruit
@@ -398,6 +398,7 @@
 		return
 	if(F.picked)
 		to_chat(src, SPAN_XENODANGER("[F] is already being picked!"))
+		return
 	// Indicates the fruit is being picked, so other xenos can't eat it at the same time
 	F.picked = TRUE
 	if(!do_after(src, F.consume_delay, INTERRUPT_ALL, BUSY_ICON_FRIENDLY))
