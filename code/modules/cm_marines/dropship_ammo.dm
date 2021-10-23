@@ -288,7 +288,7 @@
 //minirockets
 
 /obj/structure/ship_ammo/minirocket
-	name = "mini rocket stack"
+	name = "minirocket stack"
 	desc = "A pack of laser guided minirockets."
 	icon_state = "minirocket"
 	icon = 'icons/obj/structures/props/almayer_props.dmi'
@@ -325,7 +325,7 @@
 
 
 /obj/structure/ship_ammo/minirocket/incendiary
-	name = "incendiary mini rocket stack"
+	name = "incendiary minirocket stack"
 	desc = "A pack of laser guided incendiary minirockets."
 	icon_state = "minirocket_inc"
 	point_cost = 500
