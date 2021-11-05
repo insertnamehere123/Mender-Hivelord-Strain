@@ -7,11 +7,17 @@
 	mutator_actions_to_remove = list(
 		/datum/action/xeno_action/activable/secrete_resin/hivelord,
 		/datum/action/xeno_action/activable/corrosive_acid,
+<<<<<<< refs/remotes/origin/dev
 		/datum/action/xeno_action/onclick/toggle_speed
 	)
 	mutator_actions_to_add = list(
 		/datum/action/xeno_action/activable/secrete_resin/remote, //third macro
 		/datum/action/xeno_action/onclick/toggle_speed // readding it so it gets at the end of the ability list
+=======
+	)
+	mutator_actions_to_add = list(
+		/datum/action/xeno_action/activable/secrete_resin/remote //third macro
+>>>>>>> Xeno Defense Buff
 	)
 	keystone = TRUE
 
@@ -44,14 +50,21 @@
 	action_icon_state = "secrete_resin"
 	ability_name = "coerce resin"
 	var/last_use = 0
+<<<<<<< refs/remotes/origin/dev
 	xeno_cooldown = 1 SECONDS
+=======
+	xeno_cooldown = 0.5 SECONDS
+>>>>>>> Xeno Defense Buff
 	thick = FALSE
 	make_message = FALSE
 
 	no_cooldown_msg = TRUE
+<<<<<<< refs/remotes/origin/dev
 
 	var/care_about_adjacency = TRUE
 	build_speed_mod = 2 // the actual building part takes twice as long
+=======
+>>>>>>> Xeno Defense Buff
 
 	macro_path = /datum/action/xeno_action/verb/verb_coerce_resin
 	action_type = XENO_ACTION_CLICK
@@ -67,6 +80,7 @@
 	if(!T)
 		return
 
+<<<<<<< refs/remotes/origin/dev
 	// since actions are instanced per xeno, and only one construction can be made at a time, tweaking the datum on the fly here is fine. you're going to have to figure something out if these conditions change, though
 	if(care_about_adjacency)
 		if(owner.Adjacent(T))
@@ -74,6 +88,8 @@
 		else
 			build_speed_mod = initial(build_speed_mod)
 
+=======
+>>>>>>> Xeno Defense Buff
 	var/mob/living/carbon/Xenomorph/X = owner
 	if(!..())
 		return
