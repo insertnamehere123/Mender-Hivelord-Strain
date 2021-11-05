@@ -11,6 +11,7 @@
 	/// Probably should only have the cooldown var, but that is for another rework
 	var/xeno_cooldown = null
 	var/cooldown_message = null
+	var/no_cooldown_msg = FALSE
 
 	var/cooldown_timer_id = TIMER_ID_NULL // holds our timer ID
 
@@ -161,10 +162,10 @@
 // use_ability. Anything that uses onclick should not require an argument to be handed to action_activate in order to function.
 /datum/action/xeno_action/onclick
 	action_type = XENO_ACTION_CLICK
+	no_cooldown_msg = TRUE
 
 /datum/action/xeno_action/onclick/action_activate()
 	use_ability_wrapper(null)
-	return
 
 // Adds a cooldown to this
 // According to the cooldown variables set on this and
@@ -299,11 +300,11 @@
 	for(var/X in owner.actions)
 		var/datum/action/act = X
 		act.update_button_icon()
-	if(cooldown_message)
-		to_chat(owner, SPAN_XENODANGER("[cooldown_message]"))
-	else if (!istype(src, /datum/action/xeno_action/onclick))
-		to_chat(owner, SPAN_XENODANGER("You feel your strength return! You can use [name] again!"))
-	return
+	if(!no_cooldown_msg)
+		if(cooldown_message)
+			to_chat(owner, SPAN_XENODANGER("[cooldown_message]"))
+		else
+			to_chat(owner, SPAN_XENODANGER("You feel your strength return! You can use [name] again!"))
 
 // Helper proc to get an action on a target Xeno by type.
 // Used to interact with abilities from the outside
