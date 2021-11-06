@@ -414,9 +414,9 @@
 	var/firing_cooldown = 2 SECONDS
 
 	var/acid_type = /obj/effect/xenomorph/spray/weak
-
-	var/list/mob/living/carbon/next_fire
 	var/range = 5
+
+	var/currently_firing = FALSE
 
 /obj/effect/alien/resin/acid_pillar/Initialize(mapload, hive)
 	. = ..()
@@ -430,13 +430,17 @@
 	if(get_dist(src, C) > range)
 		return FALSE
 
-	if(C.stat == DEAD)
-		return FALSE
-
+	var/check_dead = FALSE
 	if(C.ally_of_hivenumber(hivenumber))
 		if(!C.on_fire)
 			return FALSE
-	else if(C.lying)
+		check_dead = TRUE
+	else if(C.lying || C.is_mob_incapacitated(TRUE))
+		return FALSE
+
+	if(check_dead && C.stat == DEAD)
+		return FALSE
+	else if(C.health < 0)
 		return FALSE
 
 	var/turf/current_turf
@@ -459,55 +463,41 @@
 		return TRUE
 
 /obj/effect/alien/resin/acid_pillar/process()
+	if(currently_firing)
+		return
+	var/mob/living/carbon/target = null
+	var/furthest_distance = INFINITY
 	for(var/mob/living/carbon/C in urange(range, get_turf(loc)))
 		if(!can_target(C))
 			continue
-
-		var/can_fire = LAZYACCESS(next_fire, C)
-
-		if(can_fire && can_fire > world.time)
+		var/distance_between = get_dist(src, C)
+		if(distance_between > furthest_distance)
 			continue
-
-		SSacid_pillar.queue_attack(src, C)
+		furthest_distance = distance_between
+		target = C
+	if(target)
+		currently_firing = TRUE
+		SSacid_pillar.queue_attack(src, target)
 
 /obj/effect/alien/resin/acid_pillar/proc/acid_travel(var/datum/acid_spray_info/info)
 	if(QDELETED(src))
 		return FALSE
 
-	var/turf/next_turf = can_target(info.target, info.distance_travelled+2)
-
-	if(!isturf(next_turf))
-		return FALSE
-
 	if(info.distance_travelled > range)
 		return FALSE
 
-	var/mob/living/carbon/C = info.target
-
-	var/turf/potential_turf = get_step_towards(info.current_turf, C)
-
-	if(!potential_turf.density)
-		next_turf = potential_turf
+	var/turf/next_turf = get_step_towards(info.current_turf, info.target_turf)
+	if(next_turf.density)
+		return FALSE
 
 	info.distance_travelled += 1
 	info.current_turf = next_turf
 
 	new acid_type(next_turf, create_cause_data(initial(name)), hivenumber)
-
-	if(get_dist(next_turf, C) == 0)
-		LAZYSET(next_fire, info.target, world.time + firing_cooldown)
-		RegisterSignal(info.target, COMSIG_PARENT_QDELETING, .proc/cleanup_next_fire, TRUE)
-		return FALSE
-
 	return TRUE
-
-/obj/effect/alien/resin/acid_pillar/proc/cleanup_next_fire(var/datum/D)
-	SIGNAL_HANDLER
-	LAZYREMOVE(next_fire, D)
 
 /obj/effect/alien/resin/acid_pillar/Destroy()
 	STOP_PROCESSING(SSprocessing, src)
-	next_fire = null
 	return ..()
 
 /obj/effect/alien/resin/acid_pillar/get_projectile_hit_boolean(obj/item/projectile/P)
