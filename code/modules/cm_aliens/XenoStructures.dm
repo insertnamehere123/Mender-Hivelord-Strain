@@ -431,12 +431,22 @@
 	if(C.ally_of_hivenumber(hivenumber))
 		if(!C.on_fire || !isXeno(C))
 			return FALSE
+<<<<<<< refs/remotes/origin/dev
 	else if(C.lying || C.is_mob_incapacitated(TRUE))
 		return FALSE
 
 	if(!check_dead && C.health < 0)
 		return FALSE
 	if(check_dead && C.stat == DEAD)
+=======
+		check_dead = TRUE
+	else if(C.lying || C.is_mob_incapacitated(TRUE))
+		return FALSE
+
+	if(check_dead && C.stat == DEAD)
+		return FALSE
+	else if(C.health < 0)
+>>>>>>> acid pillar nerf
 		return FALSE
 
 	var/turf/current_turf
@@ -474,13 +484,17 @@
 	if(target)
 		currently_firing = TRUE
 		SSacid_pillar.queue_attack(src, target)
+<<<<<<< refs/remotes/origin/dev
 		playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
 		flick("acid_pillar_attack", src)
+=======
+>>>>>>> acid pillar nerf
 
 /obj/effect/alien/resin/acid_pillar/proc/acid_travel(var/datum/acid_spray_info/info)
 	if(QDELETED(src))
 		return FALSE
 
+<<<<<<< refs/remotes/origin/dev
 	if(info.distance_travelled > range || info.current_turf == info.target_turf)
 		return FALSE
 
@@ -488,6 +502,15 @@
 	if(next_turf.density)
 		return FALSE
 
+=======
+	if(info.distance_travelled > range)
+		return FALSE
+
+	var/turf/next_turf = get_step_towards(info.current_turf, info.target_turf)
+	if(next_turf.density)
+		return FALSE
+
+>>>>>>> acid pillar nerf
 	info.distance_travelled += 1
 	info.current_turf = next_turf
 
