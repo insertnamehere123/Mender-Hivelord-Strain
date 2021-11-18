@@ -65,9 +65,13 @@
 	ability_primacy = XENO_PRIMARY_ACTION_4
 
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 	care_about_adjacency = FALSE
 =======
 >>>>>>> Resin Whisperer Nerf
+=======
+	care_about_adjacency = FALSE
+>>>>>>> make sure queen eye doesn't take twice as long
 	build_speed_mod = 1
 
 	var/boosted = FALSE
