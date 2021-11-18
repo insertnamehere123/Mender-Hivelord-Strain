@@ -64,6 +64,7 @@
 	xeno_cooldown = 2 SECONDS
 	ability_primacy = XENO_PRIMARY_ACTION_4
 
+	care_about_adjacency = FALSE
 	build_speed_mod = 1
 
 	var/boosted = FALSE
