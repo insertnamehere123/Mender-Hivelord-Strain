@@ -64,6 +64,8 @@
 	xeno_cooldown = 2 SECONDS
 	ability_primacy = XENO_PRIMARY_ACTION_4
 
+	build_speed_mod = 1
+
 	var/boosted = FALSE
 
 /datum/action/xeno_action/activable/secrete_resin/remote/queen/New(Target, override_icon_state)
