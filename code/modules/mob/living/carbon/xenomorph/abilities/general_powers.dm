@@ -209,6 +209,7 @@
 	if(A.z != X.z)
 		to_chat(owner, SPAN_XENOWARNING("This area is too far away to affect!"))
 		return
+<<<<<<< refs/remotes/origin/dev
 	apply_cooldown()
 	switch(X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod))
 		if(SECRETE_RESIN_INTERRUPT)
@@ -220,6 +221,10 @@
 				apply_cooldown_override(1)
 			return FALSE
 	return TRUE
+=======
+	. = X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod)
+	..()
+>>>>>>> Resin Whisperer Nerf
 
 // Destructive Acid
 /datum/action/xeno_action/activable/corrosive_acid/use_ability(atom/A)

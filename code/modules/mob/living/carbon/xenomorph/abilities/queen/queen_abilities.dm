@@ -64,7 +64,10 @@
 	xeno_cooldown = 2 SECONDS
 	ability_primacy = XENO_PRIMARY_ACTION_4
 
+<<<<<<< refs/remotes/origin/dev
 	care_about_adjacency = FALSE
+=======
+>>>>>>> Resin Whisperer Nerf
 	build_speed_mod = 1
 
 	var/boosted = FALSE

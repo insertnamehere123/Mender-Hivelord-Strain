@@ -66,6 +66,8 @@
 =======
 >>>>>>> Xeno Defense Buff
 
+	build_speed_mod = 2 // the actual building part takes twice as long
+
 	macro_path = /datum/action/xeno_action/verb/verb_coerce_resin
 	action_type = XENO_ACTION_CLICK
 
@@ -81,6 +83,7 @@
 		return
 
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 	// since actions are instanced per xeno, and only one construction can be made at a time, tweaking the datum on the fly here is fine. you're going to have to figure something out if these conditions change, though
 	if(care_about_adjacency)
 		if(owner.Adjacent(T))
@@ -90,6 +93,14 @@
 
 =======
 >>>>>>> Xeno Defense Buff
+=======
+	// since actions are instanced per xeno, and only one construction can be made at a time, tweaking the datum on the fly here is fine. you're going to have to figure something out if these conditions change, though
+	if(owner.Adjacent(T))
+		build_speed_mod = 1
+	else
+		build_speed_mod = initial(build_speed_mod)
+
+>>>>>>> Resin Whisperer Nerf
 	var/mob/living/carbon/Xenomorph/X = owner
 	if(!..())
 		return
