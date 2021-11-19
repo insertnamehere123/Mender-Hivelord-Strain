@@ -432,15 +432,14 @@
 
 	var/check_dead = FALSE
 	if(C.ally_of_hivenumber(hivenumber))
-		if(!C.on_fire)
+		if(!C.on_fire || !isXeno(C))
 			return FALSE
-		check_dead = TRUE
 	else if(C.lying || C.is_mob_incapacitated(TRUE))
 		return FALSE
 
-	if(check_dead && C.stat == DEAD)
+	if(!check_dead && C.health < 0)
 		return FALSE
-	else if(C.health < 0)
+	if(check_dead && C.stat == DEAD)
 		return FALSE
 
 	var/turf/current_turf
