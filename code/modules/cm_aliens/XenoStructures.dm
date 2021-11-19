@@ -432,6 +432,7 @@
 		if(!C.on_fire || !isXeno(C))
 			return FALSE
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 	else if(C.lying || C.is_mob_incapacitated(TRUE))
 		return FALSE
 
@@ -440,13 +441,19 @@
 	if(check_dead && C.stat == DEAD)
 =======
 		check_dead = TRUE
+=======
+>>>>>>> proper acid pillar checking
 	else if(C.lying || C.is_mob_incapacitated(TRUE))
 		return FALSE
 
-	if(check_dead && C.stat == DEAD)
+	if(!check_dead && C.health < 0)
 		return FALSE
+<<<<<<< refs/remotes/origin/dev
 	else if(C.health < 0)
 >>>>>>> acid pillar nerf
+=======
+	if(check_dead && C.stat == DEAD)
+>>>>>>> proper acid pillar checking
 		return FALSE
 
 	var/turf/current_turf
