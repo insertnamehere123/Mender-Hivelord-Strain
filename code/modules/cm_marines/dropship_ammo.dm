@@ -256,8 +256,8 @@
 	desc = "The AGM-84 Harpoon is an Anti-Ship Missile, designed and used to effectively take down enemy ships with a huge blast wave with low explosive power. This one is modified to use ground signals."
 	icon_state = "harpoon"
 	ammo_id = "s"
-	travelling_time = 60
-	point_cost = 700
+	travelling_time = 50
+	point_cost = 300
 	fire_mission_delay = 4
 
 //Looks kinda OP but all it can actually do is just to blow windows and some of other things out, cant do much damage.
@@ -341,7 +341,7 @@
     desc = "A pack of laser guided flare minirockets."
     icon_state = "minirocket_flr"
     point_cost = 150
-    fire_mission_delay = 4 //we dont need a low cooldown because flares are emiting light, not explosion heh.
+    fire_mission_delay = 3
 
 /obj/structure/ship_ammo/minirocket/flare/detonate_on(turf/impact)
     impact.ceiling_debris_check(2)
