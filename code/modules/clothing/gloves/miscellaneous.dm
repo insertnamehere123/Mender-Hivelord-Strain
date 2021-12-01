@@ -82,7 +82,7 @@
 				var/mob/living/carbon/Xenomorph/X = A
 				if (X.mutation_type == WARRIOR_BOXER)
 					M.visible_message(SPAN_DANGER("[M] boxes with [A]!"))
-					var/fisticuff_phrase = pick("Have at ye!", "En guard fuckboy!", "Huttah!", "Take this uncultured cur!", "Have at you little man!")
+					var/fisticuff_phrase = pick("Have at ye!", "En garde fuckboy!", "Huttah!", "Take this uncultured cur!", "Have at you little man!")
 					M.say(fisticuff_phrase)//this is probably going to trigger spam filter, but I don't care?
 					return 0
 				else
