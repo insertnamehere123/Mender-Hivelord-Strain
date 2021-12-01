@@ -15,7 +15,10 @@
 	var/det_time = 40
 	var/dangerous = 0		//Make an danger overlay for humans?
 	var/arm_sound = 'sound/weapons/armbomb.ogg'
-	var/explosion_sound = 'sound/effects/grenade_explosionv3.ogg'
+	var/explosion_sound = 'sound/explosives/grenade_explosion.ogg'
+	var/explosion_icon = 'icons/effects/explosion100.dmi'
+	var/explosion_icon_state = "big"
+	var/explosion_offset = TRUE//if we're using explosion100.dmi, make sure to set this to true!
 	var/has_arm_sound = TRUE
 	var/underslug_launchable = FALSE
 	var/hand_throwable = TRUE
@@ -40,6 +43,16 @@
 		return FALSE
 
 	return TRUE
+
+/obj/item/explosive/grenade/proc/apply_explosion_overlay()
+	var/obj/effect/overlay/O = new /obj/effect/overlay(loc)
+	O.name = "grenade"
+	O.icon = explosion_icon
+	if(explosion_offset)
+		O.pixel_y = -34//icon is 100 by 100, need to center it on the tile!
+		O.pixel_x = -34
+	flick(explosion_icon_state, O)
+	QDEL_IN(O, 7)
 
 /obj/item/explosive/grenade/dropped(mob/user)
 	. = ..()

@@ -16,9 +16,7 @@
 	item_state = "grenade_hedp"
 	dangerous = 1
 	underslug_launchable = TRUE
-	var/explosion_icon = 'icons/effects/explosion100.dmi'
-	var/explosion_icon_state = "big"
-	var/explosion_offset = TRUE//if we're using explosion100.dmi, make sure to set this to true!
+
 	var/explosion_power = 100
 	var/explosion_falloff = 25
 	var/shrapnel_count = 0
@@ -39,17 +37,6 @@
 	apply_explosion_overlay()
 	cell_explosion(loc, explosion_power, explosion_falloff, falloff_mode, null, cause_data, explosion_sound)
 	qdel(src)
-
-
-/obj/item/explosive/grenade/HE/proc/apply_explosion_overlay()
-	var/obj/effect/overlay/O = new /obj/effect/overlay(loc)
-	O.name = "grenade"
-	O.icon = explosion_icon
-	if(explosion_offset)
-		O.pixel_y = -34//icon is 100 by 100, need to center it on the tile!
-		O.pixel_x = -34
-	flick(explosion_icon_state, O)
-	QDEL_IN(O, 7)
 
 /obj/item/explosive/grenade/HE/flamer_fire_act(damage, flame_cause_data)
 	fire_resistance--
@@ -215,6 +202,8 @@
 	flags_equip_slot = SLOT_WAIST
 	dangerous = 1
 	underslug_launchable = TRUE
+	explosion_icon_state = "greenflame"
+	explosion_offset = TRUE
 	var/flame_level = 20
 	var/burn_level = 15
 	var/flameshape = FLAMESHAPE_DEFAULT
@@ -222,7 +211,8 @@
 
 /obj/item/explosive/grenade/incendiary/prime()
 	INVOKE_ASYNC(GLOBAL_PROC, .proc/flame_radius, cause_data, radius, get_turf(src), flame_level, burn_level, flameshape, null)
-	playsound(src.loc, 'sound/weapons/gun_flamethrower2.ogg', 35, 1, 4)
+	playsound(src.loc, 'sound/explosives/grenade_incen.ogg', 35, 1, 4)
+	apply_explosion_overlay()
 	qdel(src)
 
 /proc/flame_radius(var/datum/cause_data/cause_data, var/radius = 1, var/turf/T, var/flame_level = 14, var/burn_level = 15, var/flameshape = FLAMESHAPE_DEFAULT, var/target)
@@ -255,7 +245,7 @@
 	..(loc)
 
 /obj/item/explosive/grenade/incendiary/molotov/prime()
-	playsound(src.loc, 'sound/effects/hit_on_shattered_glass.ogg', 35, 1, 4)
+	playsound(src.loc, 'sound/explosives/grenade_molotov.ogg', 35, 1, 4)
 	..()
 
 /*
