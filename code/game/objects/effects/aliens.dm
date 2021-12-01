@@ -410,14 +410,19 @@
 				continue
 			H.apply_armoured_damage(damage, ARMOR_BIO, BURN)
 			animation_flash_color(H)
+
 			to_chat(H, SPAN_XENODANGER("You are scalded by acid as a massive glob explodes nearby!"))
+			playsound(H.loc,'sound/explosives/trapper_impact.ogg',40,null,2)
 
 	icon_state = "boiler_bombard_heavy"
+
 
 /obj/effect/xenomorph/boiler_bombard/proc/make_smoke()
 	var/obj/effect/particle_effect/smoke/S = new smoke_type(loc, 1, create_cause_data(initial(source_xeno?.caste_type), source_xeno))
 	S.time_to_live = smoke_duration
 	S.spread_speed = smoke_duration + 5 // No spreading
+
+	playsound(loc,'sound/explosives/boiler_blob_impact.ogg',50,null,5)
 
 	qdel(src)
 
@@ -483,6 +488,16 @@
 			continue
 
 		animation_flash_color(H)
+
+		var/obj/effect/overlay/O = new /obj/effect/overlay(loc)
+		O.name = "boiler explosion"
+		O.icon = 'icons/effects/explosion100.dmi'
+		O.pixel_y = -24//icon is 100 by 100, need to center it on the tile!
+		O.pixel_x = -34
+		O.layer = ABOVE_MOB_LAYER
+		flick("boiler_trap", O)
+		QDEL_IN(O, 7)
+		playsound(loc,'sound/explosives/trapper_impact.ogg',60,null,5)
 
 		if(isXeno(H))
 			H.apply_armoured_damage(damage * XVX_ACID_DAMAGEMULT * xeno_empower_modifier, ARMOR_BIO, BURN)
