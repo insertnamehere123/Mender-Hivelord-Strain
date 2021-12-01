@@ -15,6 +15,7 @@
 	var/det_time = 40
 	var/dangerous = 0		//Make an danger overlay for humans?
 	var/arm_sound = 'sound/weapons/armbomb.ogg'
+	var/explosion_sound = 'sound/effects/grenade_explosionv3.ogg'
 	var/has_arm_sound = TRUE
 	var/underslug_launchable = FALSE
 	var/hand_throwable = TRUE

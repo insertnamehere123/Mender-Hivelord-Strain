@@ -16,6 +16,9 @@
 	item_state = "grenade_hedp"
 	dangerous = 1
 	underslug_launchable = TRUE
+	var/explosion_icon = 'icons/effects/explosion100.dmi'
+	var/explosion_icon_state = "big"
+	var/explosion_offset = TRUE//if we're using explosion100.dmi, make sure to set this to true!
 	var/explosion_power = 100
 	var/explosion_falloff = 25
 	var/shrapnel_count = 0
@@ -34,15 +37,18 @@
 		create_shrapnel(loc, shrapnel_count, , ,shrapnel_type, cause_data)
 		sleep(2) //so that mobs are not knocked down before being hit by shrapnel. shrapnel might also be getting deleted by explosions?
 	apply_explosion_overlay()
-	cell_explosion(loc, explosion_power, explosion_falloff, falloff_mode, null, cause_data)
+	cell_explosion(loc, explosion_power, explosion_falloff, falloff_mode, null, cause_data, explosion_sound)
 	qdel(src)
 
 
 /obj/item/explosive/grenade/HE/proc/apply_explosion_overlay()
 	var/obj/effect/overlay/O = new /obj/effect/overlay(loc)
 	O.name = "grenade"
-	O.icon = 'icons/effects/explosion.dmi'
-	flick("grenade", O)
+	O.icon = explosion_icon
+	if(explosion_offset)
+		O.pixel_y = -34//icon is 100 by 100, need to center it on the tile!
+		O.pixel_x = -34
+	flick(explosion_icon_state, O)
 	QDEL_IN(O, 7)
 
 /obj/item/explosive/grenade/HE/flamer_fire_act(damage, flame_cause_data)
