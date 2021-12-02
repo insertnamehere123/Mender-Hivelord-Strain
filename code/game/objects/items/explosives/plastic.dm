@@ -24,6 +24,11 @@
 	disarm()
 	. = ..()
 
+/obj/item/explosive/plastic/explosion_throw(severity, direction, scatter_multiplier)
+	if(active)
+		return
+	return ..()
+
 /obj/item/explosive/plastic/attack(mob/M as mob, mob/user as mob)
 	return FALSE
 
@@ -81,6 +86,7 @@
 	cause_data = create_cause_data(initial(name), user)
 	plant_target = target
 	icon_state = overlay_image
+	layer = BELOW_MOB_LAYER
 
 	if(!istype(target, /obj/structure/window) && !istype(target, /turf/closed))
 		user.drop_held_item()

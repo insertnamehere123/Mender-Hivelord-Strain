@@ -440,7 +440,7 @@
 	if(SEND_SIGNAL(src, COMSIG_BULLET_PRE_HANDLE_MOB, L, .) & COMPONENT_BULLET_PASS_THROUGH)
 		return FALSE
 
-	if(L in permutated)
+	if((MODE_HAS_TOGGLEABLE_FLAG(MODE_NO_ATTACK_DEAD) && L.stat == DEAD) || (L in permutated))
 		return FALSE
 	permutated |= L
 
@@ -762,6 +762,11 @@
 			if(shooter_human.faction == faction && !(ammo_flags & AMMO_ALWAYS_FF))
 				. -= FF_hit_evade
 
+			if(ammo_flags & AMMO_MP)
+				if(criminal)
+					. += FF_hit_evade
+				else
+					return FALSE
 
 /mob/living/carbon/Xenomorph/get_projectile_hit_chance(obj/item/projectile/P)
 	. = ..()
@@ -892,6 +897,17 @@
 		return
 
 	if(damage || (ammo_flags && AMMO_SPECIAL_EMBED))
+
+		var/splatter_dir = get_dir(P.starting, loc)
+		if(isHumanStrict(src))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter/human(loc, splatter_dir)
+		if(isYautja(src))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter/yautjasplatter(loc, splatter_dir)
+		if(isXeno(src))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter/xenosplatter(loc, splatter_dir)
+		if(isSynth(src))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter/synthsplatter(loc, splatter_dir)
+
 		. = TRUE
 		apply_damage(damage_result, P.ammo.damage_type, P.def_zone, firer = P.firer)
 		P.play_damage_effect(src)
@@ -973,10 +989,16 @@
 
 	bullet_message(P) //Message us about the bullet, since damage was inflicted.
 
+
+
 	if(SEND_SIGNAL(src, COMSIG_XENO_BULLET_ACT, damage_result, ammo_flags, P) & COMPONENT_CANCEL_BULLET_ACT)
 		return
 
 	if(damage)
+		//only apply the blood splatter if we do damage
+		var/splatter_dir = get_dir(P.starting, loc)//loc is the xeno getting hit, P.starting is the turf of where the projectile got spawned
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter/xenosplatter(loc, splatter_dir)
+
 		apply_damage(damage_result,P.ammo.damage_type, P.def_zone)	//Deal the damage.
 		if(xeno_shields.len)
 			P.play_shielded_damage_effect(src)

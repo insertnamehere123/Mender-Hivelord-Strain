@@ -65,8 +65,14 @@ var/global/list/datum/stack_recipe/metal_recipes = list ( \
 /obj/item/stack/sheet/metal/small_stack
 	amount = STACK_10
 
+/obj/item/stack/sheet/metal/med_small_stack
+	amount = STACK_20
+
 /obj/item/stack/sheet/metal/medium_stack
-	amount = STACK_25
+	amount = STACK_30
+
+/obj/item/stack/sheet/metal/med_large_stack
+	amount = STACK_40
 
 /obj/item/stack/sheet/metal/large_stack
 	amount = STACK_50
@@ -110,8 +116,14 @@ var/global/list/datum/stack_recipe/plasteel_recipes = list ( \
 /obj/item/stack/sheet/plasteel/small_stack
 	amount = STACK_10
 
+/obj/item/stack/sheet/plasteel/med_small_stack
+	amount = STACK_20
+
 /obj/item/stack/sheet/plasteel/medium_stack
 	amount = STACK_30
+
+/obj/item/stack/sheet/plasteel/med_large_stack
+	amount = STACK_40
 
 /obj/item/stack/sheet/plasteel/large_stack
 	amount = STACK_50
@@ -130,7 +142,8 @@ var/global/list/datum/stack_recipe/wood_recipes = list ( \
 
 	new/datum/stack_recipe("wooden door", /obj/structure/mineral_door/wood, 10, time = 20, one_per_turf = ONE_TYPE_PER_TURF, on_floor = 1), \
 	new/datum/stack_recipe("coffin", /obj/structure/closet/coffin, 5, time = 15, one_per_turf = ONE_TYPE_PER_TURF, on_floor = 1), \
-	new/datum/stack_recipe("baseball bat", /obj/item/weapon/melee/baseballbat, 10, time = 20, on_floor = 1) \
+	new/datum/stack_recipe("baseball bat", /obj/item/weapon/melee/baseballbat, 10, time = 20, on_floor = 1), \
+	new/datum/stack_recipe("wooden cross", /obj/structure/prop/wooden_cross, 2, time = 10, one_per_turf = ONE_TYPE_PER_TURF, on_floor = 1) \
 	)
 
 /obj/item/stack/sheet/wood

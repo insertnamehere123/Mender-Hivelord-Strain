@@ -540,6 +540,7 @@ var/list/datum/mob_hud/huds = list(
 /mob/living/carbon/human/proc/sec_hud_set_security_status()
 	var/image/holder = hud_list[WANTED_HUD]
 	holder.icon_state = "hudblank"
+	criminal = FALSE
 	var/perpref = null
 	if(wear_id)
 		var/obj/item/card/id/I = wear_id.GetID()
@@ -554,12 +555,15 @@ var/list/datum/mob_hud/huds = list(
 			for(var/datum/data/record/R in GLOB.data_core.security)
 				if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "*Arrest*"))
 					holder.icon_state = "hudwanted"
+					criminal = TRUE
 					break
 				else if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "Incarcerated"))
 					holder.icon_state = "hudprisoner"
+					criminal = TRUE
 					break
 				else if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "Released"))
 					holder.icon_state = "hudreleased"
+					criminal = FALSE
 					break
 				else if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "Suspect"))
 					holder.icon_state = "hudsuspect"
@@ -592,7 +596,7 @@ var/list/datum/mob_hud/huds = list(
 			_role = job
 		else if(I)
 			_role = I.rank
-		switch(_role)
+		switch(GET_DEFAULT_ROLE(_role))
 			if(JOB_SQUAD_ENGI) marine_rk = "engi"
 			if(JOB_SQUAD_SPECIALIST) marine_rk = "spec"
 			if(JOB_SQUAD_RTO) marine_rk = "rto"
@@ -636,7 +640,7 @@ var/list/datum/mob_hud/huds = list(
 			_role = job
 		else if(ID)
 			_role = ID.rank
-		switch(_role)
+		switch(GET_DEFAULT_ROLE(_role))
 			if(JOB_XO)
 				marine_rk = "xo"
 				border_rk = "command"

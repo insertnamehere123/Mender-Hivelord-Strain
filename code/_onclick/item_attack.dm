@@ -40,7 +40,7 @@
 
 
 /obj/item/proc/attack(mob/living/M, mob/living/user)
-	if(flags_item & NOBLUDGEON)
+	if((flags_item & NOBLUDGEON) || (MODE_HAS_TOGGLEABLE_FLAG(MODE_NO_ATTACK_DEAD) && M.stat == DEAD && !user.get_target_lock(M.faction_group)))
 		return FALSE
 
 	if(SEND_SIGNAL(M, COMSIG_ITEM_ATTEMPT_ATTACK, user, src) & COMPONENT_CANCEL_ATTACK)
@@ -62,7 +62,7 @@
 	if(!(user in viewers(M, null)))
 		showname = "."
 
-	if ((user.client && user.client.prefs && user.client.prefs.toggle_prefs & TOGGLE_HELP_INTENT_SAFETY && user.a_intent == INTENT_HELP) || (user.mob_flags & SURGERY_MODE_ON))
+	if (user.a_intent == INTENT_HELP && ((user.client && user.client.prefs && user.client.prefs.toggle_prefs & TOGGLE_HELP_INTENT_SAFETY) || (user.mob_flags & SURGERY_MODE_ON)))
 		playsound(loc, 'sound/effects/pop.ogg', 25, 1)
 		user.visible_message(SPAN_NOTICE("[M] has been poked with [src][showname]"),\
 			SPAN_NOTICE("You poke [M == user ? "yourself":M] with [src]."), null, 4)

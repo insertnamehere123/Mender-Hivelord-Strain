@@ -35,13 +35,13 @@
 	var/weather_holder
 
 	var/list/survivor_types = list(
-		"Survivor - Scientist",
-		"Survivor - Doctor",
-		"Survivor - Chef",
-		"Survivor - Chaplain",
-		"Survivor - Miner",
-		"Survivor - Colonial Marshal",
-		"Survivor - Engineer"
+		/datum/equipment_preset/survivor/scientist,
+		/datum/equipment_preset/survivor/doctor,
+		/datum/equipment_preset/survivor/chef,
+		/datum/equipment_preset/survivor/chaplain,
+		/datum/equipment_preset/survivor/miner,
+		/datum/equipment_preset/survivor/colonial_marshal,
+		/datum/equipment_preset/survivor/engineer
 	)
 
 	var/list/defcon_triggers = list(5150, 4225, 2800, 1000, 0.0)
@@ -51,6 +51,8 @@
 	var/map_item_type
 
 	var/force_mode
+
+	var/perf_mode
 
 	var/disable_ship_map = FALSE
 
@@ -150,6 +152,14 @@
 		log_world("map_config survivor_types is not a list!")
 		return
 
+	var/list/pathed_survivor_types = list()
+	for(var/surv_type in survivor_types)
+		if(!ispath(surv_type))
+			log_world("[surv_type] isn't a proper typepath, removing from survivor_types list")
+			survivor_types -= surv_type
+		pathed_survivor_types += text2path(surv_type)
+	survivor_types = pathed_survivor_types.Copy()
+
 	if (islist(json["monkey_types"]))
 		monkey_types = list()
 		for(var/monkey in json["monkey_types"])
@@ -219,6 +229,9 @@
 
 	if(json["disable_ship_map"])
 		disable_ship_map = json["disable_ship_map"]
+
+	if(json["perf_mode"])
+		perf_mode = json["perf_mode"]
 
 	if(json["announce_text"])
 		announce_text = json["announce_text"]

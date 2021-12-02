@@ -109,6 +109,9 @@
 #define STACK_20		20
 #define STACK_25		25
 #define STACK_30		30
+#define STACK_35		35
+#define STACK_40		40
+#define STACK_45		45
 #define STACK_50		50
 
 // Assembly Stages
@@ -212,3 +215,6 @@
 #define LUMA_R 0.213
 #define LUMA_G 0.715
 #define LUMA_B 0.072
+
+//Automatic punctuation
+#define ENDING_PUNCT list(".", "-", "?", "!")
