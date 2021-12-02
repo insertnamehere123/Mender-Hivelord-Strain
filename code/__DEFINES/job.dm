@@ -1,4 +1,6 @@
 #define get_job_playtime(client, job) (client.player_data? LAZYACCESS(client.player_data.playtimes, job)? client.player_data.playtimes[job].total_minutes MINUTES_TO_DECISECOND : 0 : 0)
+#define GET_MAPPED_ROLE(title) (RoleAuthority?.role_mappings[title] ? RoleAuthority.role_mappings[title] : RoleAuthority.roles_by_name[title])
+#define GET_DEFAULT_ROLE(title) (RoleAuthority?.default_roles[title] ? RoleAuthority.default_roles[title] : title)
 
 // Squad name defines
 #define SQUAD_NAME_1					"Alpha"
@@ -46,11 +48,12 @@ var/global/list/job_command_roles = JOB_COMMAND_ROLES_LIST
 #define JOB_PILOT						"Pilot Officer"
 #define JOB_CREWMAN						"Vehicle Crewman"
 
+#define JOB_POLICE_CADET				"MP Cadet"
 #define JOB_POLICE						"Military Police"
 #define JOB_WARDEN						"Military Warden"
 #define JOB_CHIEF_POLICE				"Chief MP"
 #define JOB_POLICE_ROLES                /datum/timelock/mp
-#define JOB_POLICE_ROLES_LIST           list(JOB_POLICE, JOB_WARDEN, JOB_CHIEF_POLICE)
+#define JOB_POLICE_ROLES_LIST           list(JOB_POLICE_CADET, JOB_POLICE, JOB_WARDEN, JOB_CHIEF_POLICE)
 
 #define JOB_SEA							"Senior Enlisted Advisor"
 
@@ -65,7 +68,7 @@ var/global/list/job_command_roles = JOB_COMMAND_ROLES_LIST
 #define JOB_REQUISITION_ROLES           /datum/timelock/requisition
 #define JOB_REQUISITION_ROLES_LIST      list(JOB_CHIEF_REQUISITION, JOB_CARGO_TECH)
 
-#define JOB_MARSOC "MARSOC Operator"
+#define JOB_MARSOC						"MARSOC Operator"
 
 #define JOB_HUMAN_ROLES                 /datum/timelock/human
 #define JOB_XENO_ROLES                  /datum/timelock/xeno
@@ -111,6 +114,13 @@ var/global/list/job_command_roles = JOB_COMMAND_ROLES_LIST
 
 #define JOB_WO_CORPORATE_LIAISON		"Combat Reporter"
 #define JOB_WO_SYNTH					"Support Synthetic"
+
+#define JOB_WO_SQUAD_MARINE				"Dust Raider Squad Marine"
+#define JOB_WO_SQUAD_MEDIC				"Dust Raider Squad Medic"
+#define JOB_WO_SQUAD_ENGINEER			"Dust Raider Squad Engineer"
+#define JOB_WO_SQUAD_SMARTGUNNER		"Dust Raider Squad Smartgunner"
+#define JOB_WO_SQUAD_SPECIALIST			"Dust Raider Squad Specialist"
+#define JOB_WO_SQUAD_LEADER				"Dust Raider Squad Leader"
 
 //------------------------------------
 
@@ -192,7 +202,7 @@ var/global/list/job_command_roles = JOB_COMMAND_ROLES_LIST
 #define JOB_PROVOST_TML					"Provost Team Leader"
 #define JOB_PROVOST_ADVISOR				"Provost Advisor"
 #define JOB_PROVOST_INSPECTOR			"Provost Inspector"
-#define JOB_PROVOST_MARSHAL			"Provost Marshal"
+#define JOB_PROVOST_MARSHAL				"Provost Marshal"
 #define JOB_PROVOST_SMARSHAL			"Provost Sector Marshal"
 #define JOB_PROVOST_CMARSHAL			"Provost Chief Marshal"
 

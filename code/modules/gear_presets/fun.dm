@@ -180,7 +180,7 @@
 	H.equip_to_slot_or_del(new /obj/item/clothing/gloves/marine/veteran/PMC(H), WEAR_HANDS)
 	H.equip_to_slot_or_del(new /obj/item/explosive/grenade/empgrenade/dutch(H), WEAR_IN_BACK)
 	H.equip_to_slot_or_del(new /obj/item/explosive/grenade/empgrenade/dutch(H), WEAR_IN_BACK)
-	H.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/yautja(H), WEAR_IN_BACK)
+	H.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/yautja/hunter(H), WEAR_IN_BACK)
 	H.equip_to_slot_or_del(new /obj/item/storage/belt/marine(H), WEAR_WAIST)
 	H.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/m16/ap(H), WEAR_IN_BACK)
 	H.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/m16/ap(H), WEAR_IN_BACK)
@@ -448,14 +448,14 @@
 	H.equip_to_slot_or_del(new /obj/item/ammo_magazine/m60, WEAR_IN_ACCESSORY)
 	//pockets
 	H.equip_to_slot_or_del(new /obj/item/storage/pouch/autoinjector/full, WEAR_L_STORE)
-	H.equip_to_slot_or_del(new /obj/item/storage/pouch/medical/frt_kit/full, WEAR_R_STORE)
+	H.equip_to_slot_or_del(new /obj/item/storage/pouch/medical/full, WEAR_R_STORE)
 	//head
 	H.equip_to_slot_or_del(new /obj/item/clothing/head/ivanberet, WEAR_HEAD)
 	//limb
 	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/marine/upp, WEAR_FEET)
 	H.equip_to_slot_or_del(new /obj/item/clothing/gloves/marine/veteran/PMC, WEAR_HANDS)
 	//waist
-	H.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp/ivan, WEAR_WAIST)
+	H.equip_to_slot_or_del(new /obj/item/storage/belt/gun/type47/ivan, WEAR_WAIST)
 	//belt filled with random magazines, it's cool
 
 	H.set_species("Human Hero") //Ivan is STRONG.
@@ -511,7 +511,7 @@
 	H.equip_to_slot_or_del(new /obj/item/stack/medical/splint(H.wear_suit), WEAR_IN_JACKET)
 
 	//pockets
-	H.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/pills(H), WEAR_L_STORE)
+	H.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full(H), WEAR_L_STORE)
 	H.equip_to_slot_or_del(new /obj/item/device/flashlight/lantern(H), WEAR_R_STORE)
 
 	//head

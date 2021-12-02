@@ -11,30 +11,31 @@
 	config_tag = "Whiskey Outpost"
 	required_players 		= 0
 	xeno_bypass_timer 		= 1
-	role_instruction		= 1
-	roles_for_mode = list(/datum/job/command/commander/whiskey,
-					/datum/job/command/executive/whiskey,
-					/datum/job/civilian/synthetic/whiskey,
-					/datum/job/command/warrant/whiskey,
-					/datum/job/command/bridge/whiskey,
-					/datum/job/command/tank_crew/whiskey,
-					/datum/job/command/police/whiskey,
-					/datum/job/command/pilot/whiskey,
-					/datum/job/logistics/requisition/whiskey,
-					/datum/job/civilian/professor/whiskey,
-					/datum/job/civilian/doctor/whiskey,
-					/datum/job/civilian/researcher/whiskey,
-					/datum/job/logistics/engineering/whiskey,
-					/datum/job/logistics/tech/maint/whiskey,
-					/datum/job/logistics/cargo/whiskey,
-					/datum/job/civilian/liaison/whiskey,
-					/datum/job/marine/leader/equipped/whiskey,
-					/datum/job/marine/specialist/equipped/whiskey,
-					/datum/job/marine/smartgunner/equipped/whiskey,
-					/datum/job/marine/medic/equipped/whiskey,
-					/datum/job/marine/engineer/equipped/whiskey,
-					/datum/job/marine/standard/equipped/whiskey
-)
+	flags_round_type = MODE_NEW_SPAWN
+	role_mappings = list(
+					/datum/job/command/commander/whiskey = JOB_CO,
+					/datum/job/command/executive/whiskey = JOB_XO,
+					/datum/job/civilian/synthetic/whiskey = JOB_SYNTH,
+					/datum/job/command/warrant/whiskey = JOB_CHIEF_POLICE,
+					/datum/job/command/bridge/whiskey = JOB_SO,
+					/datum/job/command/tank_crew/whiskey = JOB_CREWMAN,
+					/datum/job/command/police/whiskey = JOB_POLICE,
+					/datum/job/command/pilot/whiskey = JOB_PILOT,
+					/datum/job/logistics/requisition/whiskey = JOB_CHIEF_REQUISITION,
+					/datum/job/civilian/professor/whiskey = JOB_CMO,
+					/datum/job/civilian/doctor/whiskey = JOB_DOCTOR,
+					/datum/job/civilian/researcher/whiskey = JOB_RESEARCHER,
+					/datum/job/logistics/engineering/whiskey = JOB_CHIEF_ENGINEER,
+					/datum/job/logistics/tech/maint/whiskey = JOB_MAINT_TECH,
+					/datum/job/logistics/cargo/whiskey = JOB_CARGO_TECH,
+					/datum/job/civilian/liaison/whiskey = JOB_CORPORATE_LIAISON,
+					/datum/job/marine/leader/equipped/whiskey = JOB_SQUAD_LEADER,
+					/datum/job/marine/specialist/equipped/whiskey = JOB_SQUAD_SPECIALIST,
+					/datum/job/marine/smartgunner/equipped/whiskey = JOB_SQUAD_SMARTGUN,
+					/datum/job/marine/medic/equipped/whiskey = JOB_SQUAD_MEDIC,
+					/datum/job/marine/engineer/equipped/whiskey = JOB_SQUAD_ENGI,
+					/datum/job/marine/standard/equipped/whiskey = JOB_SQUAD_MARINE
+	)
 
 
 	latejoin_larva_drop = 0 //You never know
@@ -73,6 +74,9 @@
 
 	hardcore = TRUE
 	votable = FALSE // not fun
+
+/datum/game_mode/whiskey_outpost/get_roles_list()
+	return ROLES_WO
 
 /datum/game_mode/whiskey_outpost/announce()
 	return 1
@@ -113,7 +117,7 @@
 				spawn_player(H)
 	sleep(10)
 	to_world("<span class='round_header'>The current game mode is - WHISKEY OUTPOST!</span>")
-	to_world(SPAN_ROUNDBODY("It is the year [game_year - 5] on the planet LV-624, five years before the arrival of the USS Almayer and the 7th 'Falling Falcons' Battalion in the sector"))
+	to_world(SPAN_ROUNDBODY("It is the year [game_year - 5] on the planet LV-624, five years before the arrival of the USS Almayer and the 2nd 'Falling Falcons' Battalion in the sector"))
 	to_world(SPAN_ROUNDBODY("The 3rd 'Dust Raiders' Battalion is charged with establishing a USCM prescence in the Tychon's Rift sector"))
 	to_world(SPAN_ROUNDBODY("[SSmapping.configs[GROUND_MAP].map_name], one of the Dust Raider bases being established in the sector, has come under attack from unrecognized alien forces"))
 	to_world(SPAN_ROUNDBODY("With casualties mounting and supplies running thin, the Dust Raiders at [SSmapping.configs[GROUND_MAP].map_name] must survive for an hour to alert the rest of their battalion in the sector"))
@@ -203,9 +207,17 @@
 		finished = 2 //Marine win
 
 /datum/game_mode/whiskey_outpost/proc/disablejoining()
-	enter_allowed = 0
+	for(var/i in RoleAuthority.roles_by_name)
+		var/datum/job/J = RoleAuthority.roles_by_name[i]
+
+		// If the job has unlimited job slots, We set the amount of slots to the amount it has at the moment this is called
+		if (J.spawn_positions < 0)
+			J.spawn_positions = J.current_positions
+			J.total_positions = J.current_positions
+		J.current_positions = J.get_total_positions(TRUE)
 	to_world("<B>New players may no longer join the game.</B>")
 	message_staff("Wave one has begun. Disabled new player game joining.")
+	message_staff("Wave one has begun. Disabled new player game joining except for replacement of cryoed marines.")
 	world.update_status()
 
 /datum/game_mode/whiskey_outpost/count_xenos()//Counts braindead too
@@ -243,7 +255,7 @@
 		log_game("Round end result - xenos won")
 		to_world("<span class='round_header'>The Xenos have succesfully defended their hive from colonization.</span>")
 		to_world(SPAN_ROUNDBODY("Well done, you've secured LV-624 for the hive!"))
-		to_world(SPAN_ROUNDBODY("It will be another five years before the USCM returns to the Tychon's Rift sector, with the arrival of the 7th 'Falling Falcons' Battalion and the USS Almayer."))
+		to_world(SPAN_ROUNDBODY("It will be another five years before the USCM returns to the Tychon's Rift sector, with the arrival of the 2nd 'Falling Falcons' Battalion and the USS Almayer."))
 		to_world(SPAN_ROUNDBODY("The xenomorph hive on LV-624 remains unthreatened until then.."))
 		world << sound('sound/misc/Game_Over_Man.ogg')
 		if(round_statistics)
@@ -257,7 +269,7 @@
 		to_world("<span class='round_header'>Against the onslaught, the marines have survived.</span>")
 		to_world(SPAN_ROUNDBODY("The signal rings out to the USS Alistoun, and Dust Raiders stationed elsewhere in Tychon's Rift begin to converge on LV-624."))
 		to_world(SPAN_ROUNDBODY("Eventually, the Dust Raiders secure LV-624 and the entire Tychon's Rift sector in 2182, pacifiying it and establishing peace in the sector for decades to come."))
-		to_world(SPAN_ROUNDBODY("The USS Almayer and the 7th 'Falling Falcons' Battalion are never sent to the sector and are spared their fate in 2186."))
+		to_world(SPAN_ROUNDBODY("The USS Almayer and the 2nd 'Falling Falcons' Battalion are never sent to the sector and are spared their fate in 2186."))
 		world << sound('sound/misc/hell_march.ogg')
 		if(round_statistics)
 			round_statistics.round_result = MODE_INFESTATION_M_MAJOR

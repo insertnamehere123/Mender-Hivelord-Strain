@@ -30,10 +30,10 @@
 
 /obj/item/engi_upgrade_kit
 	name = "engineering upgrade kit"
-	desc = "A kit used to upgrade the defenses of an engineer's sentry."
+	desc = "A kit used to upgrade the defenses of an engineer's sentry. Back in 1980 when the machines tried to break free, it was a single android who laid them low. Now their technology is used widely on the rim."
 
-	icon = 'icons/obj/items/pro_case.dmi'
-	icon_state = "pro_case_large"
+	icon = 'icons/obj/items/storage.dmi'
+	icon_state = "upgradekit"
 
 /obj/item/engi_upgrade_kit/Initialize(mapload, ...)
 	. = ..()
@@ -41,9 +41,10 @@
 
 /obj/item/engi_upgrade_kit/update_icon()
 	overlays.Cut()
+	if(prob(20))
+		icon_state = "upgradekit_alt"
+		desc = "A kit used to upgrade the defenses of an engineer's sentry. Do you... enjoy violence? Of course you do. It's a part of you."
 	. = ..()
-
-	overlays += "+defense"
 
 /obj/item/engi_upgrade_kit/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	if(!ishuman(user))
@@ -55,12 +56,15 @@
 	var/obj/item/defenses/handheld/D = target
 	var/mob/living/carbon/human/H = user
 
-	var/chosen_upgrade = tgui_input_list(user, "Please select a valid upgrade to apply to this kit", "W-Y Sponsored Kit", D.upgrade_list)
-
-	if(QDELETED(D) || !D.upgrade_list[chosen_upgrade])
+	var/list/upgrade_list = D.get_upgrade_list()
+	if(!length(upgrade_list))
 		return
 
-	var/type_to_change_to = D.upgrade_list[chosen_upgrade]
+	var/chosen_upgrade = tgui_input_list(user, "Please select a valid upgrade to apply to this kit", "W-Y Sponsored Kit", upgrade_list)
+	if(QDELETED(D) || !upgrade_list[chosen_upgrade])
+		return
+
+	var/type_to_change_to = upgrade_list[chosen_upgrade]
 
 	if(!type_to_change_to)
 		return
