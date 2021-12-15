@@ -492,10 +492,14 @@
 		currently_firing = TRUE
 		SSacid_pillar.queue_attack(src, target)
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 		playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
 		flick("acid_pillar_attack", src)
 =======
 >>>>>>> acid pillar nerf
+=======
+		flick("acid_pillar_attack", src)
+>>>>>>> triio's acid pillar sprites
 
 /obj/effect/alien/resin/acid_pillar/proc/acid_travel(var/datum/acid_spray_info/info)
 	if(QDELETED(src))
