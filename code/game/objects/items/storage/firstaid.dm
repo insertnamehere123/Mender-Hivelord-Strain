@@ -159,7 +159,7 @@
 	cant_hold = list(
 		/obj/item/ammo_magazine,
 		/obj/item/explosive/grenade
-	) // we need surgery tools buddy 
+	) // we need surgery tools buddy
 
 /obj/item/storage/firstaid/surgical/fill_preset_inventory()
 	new /obj/item/tool/surgery/surgical_line(src)
@@ -245,7 +245,7 @@
 	storage_slots = null
 	use_sound = "pillbottle"
 	max_storage_space = 16
-	var/skilllock = 1
+	var/skilllock = SKILL_MEDICAL_DEFAULT
 	var/pill_type_to_fill //type of pill to use to fill in the bottle in /Initialize()
 	var/bottle_lid = TRUE //Whether it shows a visual lid when opened or closed.
 
@@ -257,7 +257,7 @@ obj/item/storage/pill_bottle/packet
 	storage_slots = 4
 	max_w_class = 0
 	max_storage_space = 4
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 	storage_flags = STORAGE_FLAGS_BOX
 
 /obj/item/storage/pill_bottle/packet/tricordrazine
@@ -373,31 +373,29 @@ obj/item/storage/pill_bottle/packet
 
 /obj/item/storage/pill_bottle/clicked(var/mob/user, var/list/mods)
 	if(..())
-		return 1
-	else
-		if(istype(loc, /obj/item/storage/belt/medical))
-			var/obj/item/storage/belt/medical/M = loc
-			if(M.mode)
-				if(skilllock && !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC))
-					error_idlock(user)
-					return
-				if(user.get_active_hand())
-					return 0
-				var/mob/living/carbon/C = user
-				if(C.handcuffed)
-					to_chat(user, SPAN_WARNING("You are handcuffed!"))
-					return
-				if(contents.len)
-					var/obj/item/I = contents[1]
-					if(user.put_in_active_hand(I))
-						remove_from_storage(I,user)
-						to_chat(user, SPAN_NOTICE("You take a pill out of the [name]."))
-						return 1
-				else
-					to_chat(user, SPAN_WARNING("The [name] is empty."))
-					return 0
-			else
-				return 0
+		return TRUE
+	if(!istype(loc, /obj/item/storage/belt/medical))
+		return FALSE
+	var/obj/item/storage/belt/medical/M = loc
+	if(!M.mode)
+		return FALSE
+	if(skilllock && !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC))
+		error_idlock(user)
+		return FALSE
+	if(user.get_active_hand())
+		return FALSE
+	var/mob/living/carbon/C = user
+	if(C.is_mob_restrained())
+		to_chat(user, SPAN_WARNING("You are restrained!"))
+		return FALSE
+	if(!contents.len)
+		to_chat(user, SPAN_WARNING("The [name] is empty."))
+		return FALSE
+	var/obj/item/I = contents[1]
+	if(user.put_in_active_hand(I))
+		remove_from_storage(I,user)
+		to_chat(user, SPAN_NOTICE("You take [I] out of the [name]."))
+		return TRUE
 
 /obj/item/storage/pill_bottle/empty(var/mob/user, var/turf/T)
 	if(skilllock && !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC))
@@ -412,57 +410,64 @@ obj/item/storage/pill_bottle/packet
 	name = "\improper Kelotane pill bottle"
 	icon_state = "pill_canister2"
 	pill_type_to_fill = /obj/item/reagent_container/pill/kelotane
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/kelotane/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 /obj/item/storage/pill_bottle/antitox
 	name = "\improper Dylovene pill bottle"
 	icon_state = "pill_canister6"
 	pill_type_to_fill = /obj/item/reagent_container/pill/antitox
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/antitox/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 /obj/item/storage/pill_bottle/inaprovaline
 	name = "\improper Inaprovaline pill bottle"
 	icon_state = "pill_canister3"
 	pill_type_to_fill = /obj/item/reagent_container/pill/inaprovaline
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/inaprovaline/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 /obj/item/storage/pill_bottle/tramadol
 	name = "\improper Tramadol pill bottle"
 	icon_state = "pill_canister5"
 	pill_type_to_fill = /obj/item/reagent_container/pill/tramadol
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/tramadol/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 /obj/item/storage/pill_bottle/spaceacillin
 	name = "\improper Spaceacillin pill bottle"
 	icon_state = "pill_canister4"
 	pill_type_to_fill = /obj/item/reagent_container/pill/spaceacillin
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/spaceacillin/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 /obj/item/storage/pill_bottle/bicaridine
 	name = "\improper Bicaridine pill bottle"
 	icon_state = "pill_canister11"
 	pill_type_to_fill = /obj/item/reagent_container/pill/bicaridine
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/bicaridine/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 /obj/item/storage/pill_bottle/dexalin
 	name = "\improper Dexalin pill bottle"
 	icon_state = "pill_canister1"
 	pill_type_to_fill = /obj/item/reagent_container/pill/dexalin
+	skilllock = SKILL_MEDICAL_MEDIC
 
 /obj/item/storage/pill_bottle/dexalin/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 //Alkysine
 /obj/item/storage/pill_bottle/alkysine
@@ -484,7 +489,7 @@ obj/item/storage/pill_bottle/packet
 	pill_type_to_fill = /obj/item/reagent_container/pill/peridaxon
 
 /obj/item/storage/pill_bottle/peridaxon/skillless
-	skilllock = 0
+	skilllock = SKILL_MEDICAL_DEFAULT
 
 //RUSSIAN RED ANTI-RAD
 /obj/item/storage/pill_bottle/russianRed
@@ -504,7 +509,7 @@ obj/item/storage/pill_bottle/packet
 	name = "pill bottle"
 	icon_state = "pill_canister11"
 	max_storage_space = 5
-	skilllock = 0 //CL can open it
+	skilllock = SKILL_MEDICAL_DEFAULT //CL can open it
 	var/idlock = 1
 	pill_type_to_fill = /obj/item/reagent_container/pill/ultrazine/unmarked
 

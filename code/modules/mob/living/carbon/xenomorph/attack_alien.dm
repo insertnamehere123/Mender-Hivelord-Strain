@@ -19,8 +19,8 @@
 			if(on_fire)
 				extinguish_mob(M)
 			else
-				M.visible_message(SPAN_NOTICE("[M] caresses [src] with its scythe-like arm."), \
-				SPAN_NOTICE("You caress [src] with your scythe-like arm."), null, 5, CHAT_TYPE_XENO_FLUFF)
+				M.visible_message(SPAN_NOTICE("[M] caresses [src] with its claws."), \
+				SPAN_NOTICE("You caress [src] with your claws."), null, 5, CHAT_TYPE_XENO_FLUFF)
 
 		if(INTENT_GRAB)
 			if(M == src || anchored || buckled)
@@ -95,7 +95,7 @@
 
 			var/armor_block = getarmor(affecting, ARMOR_MELEE)
 
-			if(isYautja(src) && check_zone(M.zone_selected) == "head")
+			if(wear_mask && check_zone(M.zone_selected) == "head")
 				if(istype(wear_mask, /obj/item/clothing/mask/gas/yautja))
 					var/knock_chance = 1
 					if(M.frenzy_aura > 0)
@@ -108,7 +108,10 @@
 						M.visible_message(SPAN_DANGER("The [M] smashes off [src]'s [wear_mask.name]!"), \
 						SPAN_DANGER("You smash off [src]'s [wear_mask.name]!"), null, 5)
 						drop_inv_item_on_ground(wear_mask)
-						emote("roar")
+						if(isYautja(src))
+							emote("roar")
+						else
+							emote("scream")
 						return XENO_ATTACK_ACTION
 
 			var/n_damage = armor_damage_reduction(GLOB.marine_melee, damage, armor_block)
@@ -226,8 +229,8 @@
 
 	switch(M.a_intent)
 		if(INTENT_HELP)
-			M.visible_message(SPAN_NOTICE("[M] caresses [src] with its scythe-like arm."), \
-			SPAN_NOTICE("You caress [src] with your scythe-like arm."), null, 5, CHAT_TYPE_XENO_FLUFF)
+			M.visible_message(SPAN_NOTICE("[M] caresses [src] with its claws."), \
+			SPAN_NOTICE("You caress [src] with your claws."), null, 5, CHAT_TYPE_XENO_FLUFF)
 
 		if(INTENT_GRAB)
 			if(M == src || anchored || buckled)

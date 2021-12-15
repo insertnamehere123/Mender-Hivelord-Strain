@@ -1,7 +1,7 @@
 /datum/equipment_preset/upp
 	name = FACTION_UPP
 
-	languages = list("Russian", "English")
+	languages = list(LANGUAGE_RUSSIAN, LANGUAGE_ENGLISH)
 	faction = FACTION_UPP
 	idtype = /obj/item/card/id/dogtag
 
@@ -173,7 +173,7 @@
 	H.equip_to_slot_or_del(ppouch, WEAR_R_STORE)
 	for(var/i = 1 to ppouch.storage_slots)
 		H.equip_to_slot_or_del(new /obj/item/ammo_magazine/pistol/skorpion, WEAR_IN_R_STORE)
-	H.equip_to_slot_or_del(new/obj/item/storage/pouch/medical/frt_kit/full, WEAR_L_STORE)
+	H.equip_to_slot_or_del(new/obj/item/storage/pouch/medical/full, WEAR_L_STORE)
 
 /datum/equipment_preset/upp/sapper
 	name = "UPP Sapper"
@@ -675,7 +675,7 @@
 	H.equip_to_slot_or_del(ppouch, WEAR_R_STORE)
 	for(var/i = 1 to ppouch.storage_slots)
 		H.equip_to_slot_or_del(new /obj/item/ammo_magazine/pistol/skorpion, WEAR_IN_R_STORE)
-	H.equip_to_slot_or_del(new/obj/item/storage/pouch/medical/frt_kit/full, WEAR_L_STORE)
+	H.equip_to_slot_or_del(new/obj/item/storage/pouch/medical/full, WEAR_L_STORE)
 
 //*****************************************************************************************************/
 
@@ -751,7 +751,7 @@
 	role_comm_title = "JKdo"
 	paygrade = "UC1"
 	idtype = /obj/item/card/id/data
-	languages = list("Russian", "English", "Tactical Sign Language", "Spanish")
+	languages = list(LANGUAGE_RUSSIAN, LANGUAGE_ENGLISH, LANGUAGE_TSL, LANGUAGE_SPANISH)
 
 /datum/equipment_preset/upp/commando/load_gear(mob/living/carbon/human/H)
 	//TODO: add backpacks and satchels
@@ -932,4 +932,4 @@
 	H.equip_to_slot_or_del(new /obj/item/clothing/gloves/marine/veteran, WEAR_HANDS)
 	//póckets
 	H.equip_to_slot_or_del(new /obj/item/storage/pouch/general/medium, WEAR_R_STORE)
-	H.equip_to_slot_or_del(new/obj/item/storage/pouch/medical/frt_kit/full, WEAR_L_STORE)
+	H.equip_to_slot_or_del(new /obj/item/storage/pouch/medical/full, WEAR_L_STORE)

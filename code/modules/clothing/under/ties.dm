@@ -544,7 +544,7 @@
 	hold = /obj/item/storage/internal/accessory/black_vest
 
 /obj/item/clothing/accessory/storage/black_vest/attackby(obj/item/W, mob/living/user)
-	if(HAS_TRAIT(W, TRAIT_TOOL_SCREWDRIVER) && skillcheck(user, SKILL_RESEARCH, SKILL_RESEARCH_TRAINED))
+	if(HAS_TRAIT(W, TRAIT_TOOL_WIRECUTTERS) && skillcheck(user, SKILL_RESEARCH, SKILL_RESEARCH_TRAINED))
 		var/components = 0
 		var/obj/item/reagent_container/glass/beaker/vial
 		var/obj/item/cell/battery
@@ -587,7 +587,7 @@
 	icon_state = "waistcoat"
 
 /obj/item/storage/internal/accessory/surg_vest
-	storage_slots = 12
+	storage_slots = 13
 	can_hold = list(
 		/obj/item/tool/surgery,
 		/obj/item/stack/medical/advanced/bruise_pack,
@@ -617,33 +617,23 @@
 /obj/item/clothing/accessory/storage/surg_vest/equipped
 	hold = /obj/item/storage/internal/accessory/surg_vest/equipped
 
+/obj/item/clothing/accessory/storage/knifeharness
+	name = "M272 pattern knife vest"
+	desc = "An older generation M272 pattern knife vest once employed by the USCM. Can hold up to 4 knives. It is made of synthcotton."
+	icon_state = "vest_knives"
+	hold = /obj/item/storage/internal/accessory/knifeharness
 
 /obj/item/storage/internal/accessory/knifeharness
-	storage_slots = 2
-	max_storage_space = 4
+	storage_slots = 5
+	max_storage_space = 5
 	can_hold = list(
 		/obj/item/weapon/melee/unathiknife,
 		/obj/item/tool/kitchen/utensil/knife,
 		/obj/item/tool/kitchen/utensil/pknife,
 		/obj/item/tool/kitchen/knife,
+		/obj/item/attachable/bayonet,
+		/obj/item/weapon/melee/throwing_knife,
 	)
-
-/obj/item/storage/internal/accessory/knifeharness/Initialize(mapload, obj/item/MI)
-	. = ..()
-	new /obj/item/weapon/melee/unathiknife(src)
-	new /obj/item/weapon/melee/unathiknife(src)
-
-/obj/item/clothing/accessory/storage/knifeharness
-	name = "decorated harness"
-	desc = "A heavily decorated harness of sinew and leather with two knife-loops."
-	icon_state = "unathiharness2"
-	hold = /obj/item/storage/internal/accessory/knifeharness
-
-
-
-
-
-
 
 /*
 	Holobadges are worn on the belt or neck, and can be used to show that the holder is an authorized

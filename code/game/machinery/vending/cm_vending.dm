@@ -27,7 +27,7 @@
 	var/use_points = FALSE			//disabling these two grants unlimited access to items for adminab... I mean, events purposes
 	var/use_snowflake_points = FALSE
 
-	var/avaliable_points_to_display = 0
+	var/available_points_to_display = 0
 	var/show_points = TRUE
 
 	//squad-specific gear
@@ -369,6 +369,9 @@ IN_USE						used for vending/denying
 
 	..()
 
+/obj/structure/machinery/cm_vending/proc/get_listed_products(var/mob/user)
+	return listed_products
+
 /obj/structure/machinery/cm_vending/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 0)
 
 	if(!ishuman(user))
@@ -379,15 +382,16 @@ IN_USE						used for vending/denying
 
 	var/buy_flags = NO_FLAGS
 	if(use_snowflake_points)
-		avaliable_points_to_display = H.marine_snowflake_points
+		available_points_to_display = H.marine_snowflake_points
 	else if(use_points)
-		avaliable_points_to_display = H.marine_points
+		available_points_to_display = H.marine_points
 
 	buy_flags = H.marine_buy_flags
 
-	if(listed_products.len)
-		for(var/i in 1 to listed_products.len)
-			var/list/myprod = listed_products[i]
+	var/list/ui_listed_products = get_listed_products(user)
+	if(length(ui_listed_products))
+		for(var/i in 1 to length(ui_listed_products))
+			var/list/myprod = ui_listed_products[i]
 			var/p_name = myprod[1]
 			var/p_cost = myprod[2]
 			if(p_cost > 0)
@@ -395,7 +399,7 @@ IN_USE						used for vending/denying
 
 			var/prod_available = FALSE
 			var/avail_flag = myprod[4]
-			if(avaliable_points_to_display >= p_cost && (!avail_flag || buy_flags & avail_flag))
+			if(available_points_to_display >= p_cost && (!avail_flag || buy_flags & avail_flag))
 				prod_available = TRUE
 
 			//place in main list, name, cost, available or not, color.
@@ -405,7 +409,7 @@ IN_USE						used for vending/denying
 		"vendor_name" = name,
 		"theme" = vendor_theme,
 		"show_points" = show_points,
-		"current_m_points" = avaliable_points_to_display,
+		"current_m_points" = available_points_to_display,
 		"displayed_records" = display_list,
 	)
 
@@ -501,7 +505,9 @@ IN_USE						used for vending/denying
 					return
 
 			var/idx=text2num(href_list["vend"])
-			var/list/L = listed_products[idx]
+
+			var/list/topic_listed_products = get_listed_products(user)
+			var/list/L = topic_listed_products[idx]
 
 			if((!H.assigned_squad && squad_tag) || (!H.assigned_squad?.omni_squad_vendor && (squad_tag && H.assigned_squad.name != squad_tag)))
 				to_chat(H, SPAN_WARNING("This machine isn't for your squad."))
@@ -561,7 +567,6 @@ IN_USE						used for vending/denying
 					ID.set_assignment(JOB_SQUAD_SPECIALIST + " ([specialist_assignment])")
 					GLOB.data_core.manifest_modify(H.real_name, WEAKREF(H), ID.assignment)
 					available_specialist_sets -= p_name
-
 
 
 			if(!handle_points(H, L))
@@ -674,7 +679,8 @@ IN_USE						used for vending/denying
 					return
 
 			var/idx=text2num(href_list["vend"])
-			var/list/L = listed_products[idx]
+			var/list/topic_listed_products = get_listed_products(user)
+			var/list/L = topic_listed_products[idx]
 			var/cost = L[2]
 
 			if((!H.assigned_squad && squad_tag) || (!H.assigned_squad?.omni_squad_vendor && (squad_tag && H.assigned_squad.name != squad_tag)))
@@ -687,6 +693,14 @@ IN_USE						used for vending/denying
 				to_chat(H, SPAN_WARNING("The floor is too cluttered, make some space."))
 				vend_fail()
 				return
+
+			var/bitf = L[4]
+			if(bitf)
+				if(bitf == MARINE_CAN_BUY_ESSENTIALS && vendor_role.Find(JOB_SYNTH))
+					if(H.job != JOB_SYNTH)
+						to_chat(H, SPAN_WARNING("Only USCM Synthetics may vend experimental tool tokens."))
+						vend_fail()
+						return
 
 			if(use_points)
 				if(use_snowflake_points)
@@ -796,12 +810,13 @@ IN_USE						used for vending/denying
 		return
 	var/list/display_list = list()
 
-	if(!LAZYLEN(listed_products))	//runtimed for vendors without goods in them
+	var/list/ui_listed_products = get_listed_products(user)
+	if(!LAZYLEN(ui_listed_products))	//runtimed for vendors without goods in them
 		to_chat(user, SPAN_WARNING("Vendor wasn't properly initialized, tell an admin!"))
 		return
 
-	for(var/i in 1 to listed_products.len)
-		var/list/myprod = listed_products[i]	//we take one list from listed_products
+	for(var/i in 1 to length(ui_listed_products))
+		var/list/myprod = ui_listed_products[i]	//we take one list from listed_products
 
 		var/p_name = myprod[1]					//taking it's name
 		var/p_amount = myprod[2]				//amount left
@@ -869,7 +884,8 @@ IN_USE						used for vending/denying
 					return
 
 			var/idx=text2num(href_list["vend"])
-			var/list/L = listed_products[idx]
+			var/list/topic_listed_products = get_listed_products(user)
+			var/list/L = topic_listed_products[idx]
 
 			var/turf/T = get_appropriate_vend_turf(H)
 			if(T.contents.len > 25)
@@ -931,7 +947,8 @@ IN_USE						used for vending/denying
 
 /obj/structure/machinery/cm_vending/sorted/proc/stock(obj/item/item_to_stock, mob/user)
 	var/list/R
-	for(R in (listed_products))
+	var/list/stock_listed_products = get_listed_products(user)
+	for(R in (stock_listed_products))
 		if(item_to_stock.type == R[3] && !istype(item_to_stock,/obj/item/storage))
 
 			if(item_to_stock.loc == user) //Inside the mob's inventory
@@ -951,7 +968,7 @@ IN_USE						used for vending/denying
 			return //We found our item, no reason to go on.
 
 //------------GEAR VENDORS---------------
-//For vendors with their own points avaliable
+//For vendors with their own points available
 /obj/structure/machinery/cm_vending/own_points
 	name = "\improper ColMarTech generic vendor"
 	desc = "This is a vendor with its own points system."
@@ -960,8 +977,8 @@ IN_USE						used for vending/denying
 	use_points = FALSE
 	use_snowflake_points = FALSE
 
-	var/avaliable_points = MARINE_TOTAL_BUY_POINTS
-	avaliable_points_to_display = MARINE_TOTAL_BUY_POINTS
+	var/available_points = MARINE_TOTAL_BUY_POINTS
+	available_points_to_display = MARINE_TOTAL_BUY_POINTS
 
 /obj/structure/machinery/cm_vending/own_points/Topic(href, href_list)
 	. = ..()
@@ -1003,7 +1020,8 @@ IN_USE						used for vending/denying
 					return
 
 			var/idx=text2num(href_list["vend"])
-			var/list/L = listed_products[idx]
+			var/list/topic_listed_products = get_listed_products(usr)
+			var/list/L = topic_listed_products[idx]
 			var/cost = L[2]
 
 			if((!H.assigned_squad && squad_tag) || (!H.assigned_squad?.omni_squad_vendor && (squad_tag && H.assigned_squad.name != squad_tag)))
@@ -1017,13 +1035,13 @@ IN_USE						used for vending/denying
 				vend_fail()
 				return
 
-			if(avaliable_points < cost)
+			if(available_points < cost)
 				to_chat(H, SPAN_WARNING("Not enough points."))
 				vend_fail()
 				return
 			else
-				avaliable_points -= cost
-				avaliable_points_to_display = avaliable_points
+				available_points -= cost
+				available_points_to_display = available_points
 
 			vend_succesfully(L, H, T)
 

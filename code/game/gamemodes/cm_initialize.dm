@@ -94,6 +94,7 @@ Additional game mode variables.
 	var/evolution_ovipositor_threshold = FALSE
 
 	var/flags_round_type = NO_FLAGS
+	var/toggleable_flags = NO_FLAGS
 
 
 /datum/game_mode/proc/get_roles_list()
@@ -654,8 +655,8 @@ Additional game mode variables.
 
 	if(is_synth)
 		survivor_types = list(
-				"Survivor - Synthetic", //to be expanded later
-			)
+			/datum/equipment_preset/synth/survivor, //to be expanded later
+		)
 
 	//Give them proper jobs and stuff here later
 	var/randjob = pick(survivor_types)

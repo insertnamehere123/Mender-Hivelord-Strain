@@ -73,6 +73,10 @@
 	for(var/client/C in GLOB.clients)
 		if(C.prefs.toggles_chat & CHAT_OOC)
 			var/display_name = src.key
+			if(prefs.unlock_content)
+				if(prefs.toggle_prefs & MEMBER_PUBLIC)
+					var/byond = icon('icons/effects/effects.dmi', "byondlogo")
+					display_name = "[icon2html(byond, GLOB.clients)][display_name]"
 			to_chat(C, "<font color='[display_colour]'><span class='ooc linkify'>[src.donator ? "\[D\] " : ""]<span class='prefix'>OOC: [display_name]</span>: <span class='message'>[msg]</span></span></font>")
 
 	usr.talked = 1
@@ -91,7 +95,7 @@
 	set category = "OOC.OOC"
 
 	if(usr.talked == 2)
-		to_chat(usr, SPAN_DANGER("Your spam has been consumed for it's nutritional value."))
+		to_chat(usr, SPAN_DANGER("Your spam has been consumed for its nutritional value."))
 		return
 	if((usr.talked == 1) && (usr.chatWarn >= 5))
 		usr.talked = 2
@@ -157,6 +161,10 @@
 
 		if(C.prefs.toggles_chat & CHAT_LOOC)
 			to_chat(C, "<font color='#6699CC'><span class='ooc linkify'><span class='prefix'>LOOC:</span> <EM>[display_name]:</EM> <span class='message'>[msg]</span></span></font>")
+
+	if(mob.looc_overhead)
+		var/transmit_language = isXeno(mob) ? LANGUAGE_XENOMORPH : LANGUAGE_ENGLISH
+		mob.langchat_speech(msg, heard, GLOB.all_languages[transmit_language], "#ff47d7")
 
 	// Now handle admins
 	display_name = S.key

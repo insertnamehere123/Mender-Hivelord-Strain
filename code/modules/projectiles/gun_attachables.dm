@@ -703,7 +703,7 @@ Defined in conflicts.dm of the #defines folder.
 			if(user)
 				to_chat(user, SPAN_WARNING("You must hold [G] with two hands to use [src]."))
 			return FALSE
-		if(SSticker?.mode.flags_round_type & MODE_THUNDERSTORM)
+		if(MODE_HAS_FLAG(MODE_FACTION_CLASH))
 			if(user)
 				to_chat(user, SPAN_DANGER("You peer into [src], but it seems to have fogged up. You can't use this!"))
 			return FALSE
@@ -992,6 +992,41 @@ Defined in conflicts.dm of the #defines folder.
 
 /obj/item/attachable/stock/m16/New()//no stats, its cosmetic
 	..()
+
+/obj/item/attachable/stock/m79
+	name = "\improper M79 hardened polykevlon stock"
+	desc = "Helps to mitigate the recoil of launching a 40mm grenade. Fits only to the M79."
+	icon_state = "m79_stock"
+	icon_state = "m79_stock_a"
+	wield_delay_mod = WIELD_DELAY_NONE
+	flags_attach_features = NO_FLAGS
+	hud_offset_mod = 2
+
+/obj/item/attachable/stock/mod88
+	name = "\improper Mod 88 burst stock"
+	desc = "Increases the firerate and burst amount on the Mod 88. Some versions act as a holster for the weapon when un-attached. This is a test item and should not be used in normal gameplay (yet)."
+	icon_state = "mod88_stock"
+	attach_icon = "mod88_stock_a"
+	wield_delay_mod = WIELD_DELAY_FAST
+	flags_attach_features = NO_FLAGS
+	hud_offset_mod = 4
+	size_mod = 2
+	melee_mod = 5
+
+/obj/item/attachable/stock/mod88/New()
+	..()
+	//2h
+	accuracy_mod = HIT_ACCURACY_MULT_TIER_3
+	recoil_mod = -RECOIL_AMOUNT_TIER_2
+	scatter_mod = -SCATTER_AMOUNT_TIER_7
+	burst_scatter_mod = -1
+	burst_mod = BURST_AMOUNT_TIER_2
+	delay_mod = -FIRE_DELAY_TIER_9
+	movement_onehanded_acc_penalty_mod = -MOVEMENT_ACCURACY_PENALTY_MULT_TIER_4
+	//1h
+	accuracy_unwielded_mod = HIT_ACCURACY_MULT_TIER_1
+	recoil_unwielded_mod = -RECOIL_AMOUNT_TIER_5
+	scatter_unwielded_mod = -SCATTER_AMOUNT_TIER_10
 
 /obj/item/attachable/stock/carbine
 	name = "\improper L42 synthetic stock"
@@ -1743,9 +1778,12 @@ Defined in conflicts.dm of the #defines folder.
 /datum/event_handler/bipod_movement
 	var/obj/item/attachable/bipod/attachment
 	var/obj/item/weapon/gun/G
-	handle(mob/living/sender, datum/event_args/mob_movement/ev_args)
-		if(attachment.bipod_deployed)
-			attachment.activate_attachment(G, sender)
+
+/datum/event_handler/bipod_movement/handle(mob/living/sender, datum/event_args/mob_movement/ev_args)
+	if(attachment.bipod_deployed)
+		attachment.activate_attachment(G, sender)
+	sender.apply_effect(1, SUPERSLOW)
+	sender.apply_effect(2, SLOW)
 
 /obj/item/attachable/bipod
 	name = "bipod"
@@ -1826,8 +1864,6 @@ Defined in conflicts.dm of the #defines folder.
 			else
 				to_chat(user, SPAN_NOTICE("You retract [src]."))
 				undeploy_bipod(G,user)
-				user.apply_effect(1, SUPERSLOW)
-				user.apply_effect(2, SLOW)
 				playsound(user,'sound/items/m56dauto_rotate.ogg', 55, 1)
 				if(bipod_movement)
 					user.remove_movement_handler(bipod_movement)
