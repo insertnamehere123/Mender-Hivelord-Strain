@@ -400,11 +400,8 @@
 /obj/effect/alien/resin/acid_pillar
 	name = "acid pillar"
 	desc = "A resin pillar that is oozing with acid."
-	icon = 'icons/obj/structures/alien/structures64x64.dmi'
-	icon_state = "resin_pillar"
-
-	pixel_x = -16
-	pixel_y = -16
+	icon = 'icons/obj/structures/alien/structures.dmi'
+	icon_state = "acid_pillar_idle"
 
 	health = HEALTH_RESIN_XENO_ACID_PILLAR
 	var/hivenumber = XENO_HIVE_NORMAL
@@ -477,6 +474,7 @@
 	if(target)
 		currently_firing = TRUE
 		SSacid_pillar.queue_attack(src, target)
+		flick("acid_pillar_attack", src)
 
 /obj/effect/alien/resin/acid_pillar/proc/acid_travel(var/datum/acid_spray_info/info)
 	if(QDELETED(src))
