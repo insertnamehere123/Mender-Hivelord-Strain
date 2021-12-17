@@ -89,6 +89,17 @@
 					 'sound/weapons/gun_flamethrower3.ogg')
 	return pick(fire_sounds)
 
+/obj/item/weapon/gun/flamer/afterattack(atom/A, mob/living/user, flag, params)
+	if(flag && !active_attachable && istype(A, /obj/structure/reagent_dispensers))
+		if(!istype(current_mag, /obj/item/ammo_magazine/flamer_tank/custom))
+			to_chat(user, SPAN_WARNING("You can only directly refill custom fuel tanks!"))
+			return
+		var/obj/item/ammo_magazine/flamer_tank/custom/CFT = current_mag
+		CFT.fill_from_target(A, user)
+		update_icon()
+		return
+	return ..()
+
 /obj/item/weapon/gun/flamer/Fire(atom/target, mob/living/user, params, reflex)
 	set waitfor = 0
 	if(!able_to_fire(user))
@@ -167,6 +178,8 @@
 			replace_ammo(,magazine)
 	var/obj/item/ammo_magazine/flamer_tank/tank = magazine
 	fuel_pressure = tank.fuel_pressure
+	if(istype(tank, /obj/item/ammo_magazine/flamer_tank/custom))
+		verbs |= /obj/item/weapon/gun/flamer/proc/set_fuel_pressure
 	update_icon()
 	return 1
 
@@ -185,9 +198,19 @@
 
 	current_mag.update_icon()
 	current_mag = null
+	verbs -= /obj/item/weapon/gun/flamer/proc/set_fuel_pressure
 	fuel_pressure = 1
 
 	update_icon()
+
+/obj/item/weapon/gun/flamer/proc/set_fuel_pressure()
+	set name = "Change Fuel Pressure"
+	set category = "Object"
+	set src in usr
+
+	var/obj/item/ammo_magazine/flamer_tank/custom/CFT = current_mag // not checking if current_mag exists here because it SHOULD runtime if we have this proc and no mag
+	CFT.set_fuel_pressure(usr, src)
+	fuel_pressure = CFT.fuel_pressure
 
 /obj/item/weapon/gun/flamer/proc/unleash_flame(atom/target, mob/living/user)
 	set waitfor = 0
@@ -204,7 +227,7 @@
 	R.rangefire = Clamp(R.rangefire, current_mag.reagents.min_fire_rad, current_mag.reagents.max_fire_rad)
 	var/max_range = R.rangefire
 	if (max_range < fuel_pressure) //Used for custom tanks, allows for higher ranges
-		max_range = Clamp(fuel_pressure, 0, current_mag.reagents.max_fire_rad)
+		max_range = Clamp(max_range + fuel_pressure - 1, 0, current_mag.reagents.max_fire_rad)
 	if(R.rangefire == -1)
 		max_range = current_mag.reagents.max_fire_rad
 
@@ -278,7 +301,7 @@
 		// Check we're actually firing the right fuel tank
 		if (current_mag != fuelpack.active_fuel)
 			// This was a manually loaded fuel tank
-			if (current_mag && !(current_mag in list(fuelpack.fuel, fuelpack.fuelB, fuelpack.fuelX)))
+			if (current_mag && !(current_mag in list(fuelpack.fuel, fuelpack.fuelB, fuelpack.fuelX, fuelpack.custom_fuel)))
 				to_chat(user, SPAN_WARNING("\The [current_mag] is ejected by the Broiler-T back harness and replaced with \the [fuelpack.active_fuel]!"))
 				unload(user, drop_override = TRUE)
 			current_mag = fuelpack.active_fuel
@@ -293,7 +316,7 @@
 	..()
 
 /obj/item/weapon/gun/flamer/M240T/unload(mob/user, reload_override = 0, drop_override = 0, loc_override = 0)
-	if (fuelpack && (current_mag in list(fuelpack.fuel, fuelpack.fuelB, fuelpack.fuelX)))
+	if (fuelpack && (current_mag in list(fuelpack.fuel, fuelpack.fuelB, fuelpack.fuelX, fuelpack.custom_fuel)))
 		to_chat(user, SPAN_WARNING("The incinerator tank is locked in place. It cannot be removed."))
 		return
 	..()
@@ -381,10 +404,15 @@
 		weapon_cause_data = create_cause_data(initial(name), null)
 
 	icon_state = "[flame_icon]_2"
-
-	//Fire duration increases with fuel usage
-	firelevel = R.durationfire + fuel_pressure*R.durationmod
-	burnlevel = R.intensityfire
+	//No need to check mins/maxes if we aren't using custom fuel pressures
+	if(fuel_pressure > 1)
+		//Duration scales from 1 - 1.5 times the current duration based on the pressure after pressure level 5. This is then clamped to the min/max of the fuel tank.
+		firelevel = Clamp(R.durationfire * Clamp(((fuel_pressure - 5) * FLAME_PRESSURE_DURATION_SCALING) + 1, 1, FLAME_DURATION_SCALE_MAX), tied_reagents.min_fire_dur, tied_reagents.max_fire_dur)
+		//Intensity scales from 1 - 1.25
+		burnlevel = Clamp(R.intensityfire * Clamp(((fuel_pressure - 5) * FLAME_PRESSURE_INTENSITY_SCALING) + 1, 1, FLAME_INTENSITY_SCALE_MAX), tied_reagents.min_fire_int, tied_reagents.max_fire_int)
+	else
+		firelevel = R.durationfire
+		burnlevel = R.intensityfire
 
 	update_flame()
 
@@ -396,7 +424,7 @@
 	var/burn_dam = burnlevel*FIRE_DAMAGE_PER_LEVEL
 
 	if(tied_reagents && !tied_reagents.locked)
-		var/removed = tied_reagents.remove_reagent(tied_reagent.id, FLAME_REAGENT_USE_AMOUNT * fuel_pressure)
+		var/removed = tied_reagents.remove_reagent(tied_reagent.id, FLAME_REAGENT_USE_AMOUNT * n_ceil(fuel_pressure * FLAME_REAGENT_PRESSURE_SCALING))
 		if(removed)
 			qdel(src)
 			return

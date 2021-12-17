@@ -125,7 +125,13 @@ var/list/RESTRICTED_CAMERA_NETWORKS = list( //Those networks can only be accesse
 #define FLAMESHAPE_TRIANGLE			"triangle"
 #define FLAMESHAPE_LINE 			"line"
 
-#define FLAME_REAGENT_USE_AMOUNT 1
+//for flamers/flamer fire
+#define FLAME_REAGENT_USE_AMOUNT 			1
+#define FLAME_REAGENT_PRESSURE_SCALING		0.5
+#define FLAME_PRESSURE_DURATION_SCALING 	0.1
+#define FLAME_DURATION_SCALE_MAX			1.5
+#define FLAME_PRESSURE_INTENSITY_SCALING 	0.05
+#define FLAME_INTENSITY_SCALE_MAX			1.25
 
 #define CLEANABLE_SPLATTER 		"splatter" // Vomit, oil
 #define CLEANABLE_BLOOD			"blood"

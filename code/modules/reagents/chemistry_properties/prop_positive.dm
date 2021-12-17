@@ -636,7 +636,6 @@
 	description = "The chemical can be burned as a fuel, expanding the burn time of a chemical fire. However, this also slightly lowers heat intensity."
 	rarity = PROPERTY_COMMON
 	value = 1
-	intensity_per_level = -2
 	duration_per_level = 6
 
 	intensitymod_per_level = -0.1
@@ -650,7 +649,6 @@
 	rarity = PROPERTY_COMMON
 	value = 1
 	intensity_per_level = 6
-	duration_per_level = -2
 
 	intensitymod_per_level = 0.2
 	durationmod_per_level = -0.1
@@ -663,8 +661,6 @@
 	rarity = PROPERTY_COMMON
 	value = 1
 	range_per_level = 1
-	duration_per_level = -1
-	intensity_per_level = -1
 
 	intensitymod_per_level = -0.05
 	radiusmod_per_level = 0.05
