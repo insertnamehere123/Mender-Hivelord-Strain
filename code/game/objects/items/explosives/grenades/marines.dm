@@ -16,6 +16,7 @@
 	item_state = "grenade_hedp"
 	dangerous = 1
 	underslug_launchable = TRUE
+
 	var/explosion_power = 100
 	var/explosion_falloff = 25
 	var/shrapnel_count = 0
@@ -34,16 +35,8 @@
 		create_shrapnel(loc, shrapnel_count, , ,shrapnel_type, cause_data)
 		sleep(2) //so that mobs are not knocked down before being hit by shrapnel. shrapnel might also be getting deleted by explosions?
 	apply_explosion_overlay()
-	cell_explosion(loc, explosion_power, explosion_falloff, falloff_mode, null, cause_data)
+	cell_explosion(loc, explosion_power, explosion_falloff, falloff_mode, null, cause_data, explosion_sound)
 	qdel(src)
-
-
-/obj/item/explosive/grenade/HE/proc/apply_explosion_overlay()
-	var/obj/effect/overlay/O = new /obj/effect/overlay(loc)
-	O.name = "grenade"
-	O.icon = 'icons/effects/explosion.dmi'
-	flick("grenade", O)
-	QDEL_IN(O, 7)
 
 /obj/item/explosive/grenade/HE/flamer_fire_act(damage, flame_cause_data)
 	fire_resistance--
@@ -209,6 +202,8 @@
 	flags_equip_slot = SLOT_WAIST
 	dangerous = 1
 	underslug_launchable = TRUE
+	explosion_icon_state = "greenflame"
+	explosion_offset = TRUE
 	var/flame_level = 20
 	var/burn_level = 15
 	var/flameshape = FLAMESHAPE_DEFAULT
@@ -216,7 +211,8 @@
 
 /obj/item/explosive/grenade/incendiary/prime()
 	INVOKE_ASYNC(GLOBAL_PROC, .proc/flame_radius, cause_data, radius, get_turf(src), flame_level, burn_level, flameshape, null)
-	playsound(src.loc, 'sound/weapons/gun_flamethrower2.ogg', 35, 1, 4)
+	playsound(src.loc, 'sound/explosives/grenade_incen.ogg', 35, 1, 4)
+	apply_explosion_overlay()
 	qdel(src)
 
 /proc/flame_radius(var/datum/cause_data/cause_data, var/radius = 1, var/turf/T, var/flame_level = 14, var/burn_level = 15, var/flameshape = FLAMESHAPE_DEFAULT, var/target)
@@ -249,7 +245,7 @@
 	..(loc)
 
 /obj/item/explosive/grenade/incendiary/molotov/prime()
-	playsound(src.loc, 'sound/effects/hit_on_shattered_glass.ogg', 35, 1, 4)
+	playsound(src.loc, 'sound/explosives/grenade_molotov.ogg', 35, 1, 4)
 	..()
 
 /*
@@ -322,6 +318,7 @@
 	playsound(src.loc, 'sound/effects/smoke.ogg', 25, 1, 4)
 	smoke.set_up(3, 0, get_turf(src), null, 6)
 	smoke.start()
+	playsound(src.loc, 'sound/explosives/grenade_smoke.ogg', 35, 1, 4)
 	qdel(src)
 
 /obj/item/explosive/grenade/phosphorus
@@ -352,6 +349,7 @@
 	playsound(src.loc, 'sound/effects/smoke.ogg', 25, 1, 4)
 	smoke.set_up(3, 0, get_turf(src))
 	smoke.start()
+	playsound(src.loc, 'sound/explosives/grenade_smoke.ogg', 35, 1, 4)
 	qdel(src)
 
 /obj/item/explosive/grenade/phosphorus/upp
@@ -493,3 +491,8 @@
 	unacidable = TRUE
 	arm_sound = 'sound/voice/holy_chorus.ogg'//https://www.youtube.com/watch?v=hNV5sPZFuGg
 	falloff_mode = EXPLOSION_FALLOFF_SHAPE_LINEAR
+
+/obj/item/explosive/grenade/HE/holy_hand_grenade/activate()
+	. = ..()
+	usr.say("O LORD, bless this Thy hand grenade that with it Thou mayest blow Thine enemies to tiny bits, in Thy mercy.\" And the LORD did grin and the people did feast upon the lambs and sloths and carp and anchovies... And the LORD spake, saying, \"First shalt thou take out the Holy Pin, then shalt thou count to three, no more, no less. Three shall be the number thou shalt count, and the number of the counting shall be three. Four shalt thou not count, neither count thou two, excepting that thou then proceed to three. Five is right out. Once the number three, being the third number, be reached, then lobbest thou thy Holy Hand Grenade of Antioch towards thy foe, who, being naughty in My sight, shall snuff it.\"")
+

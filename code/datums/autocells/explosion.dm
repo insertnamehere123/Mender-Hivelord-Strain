@@ -246,7 +246,7 @@
 // I'll admit most of the code from here on out is basically just copypasta from DOREC
 
 // Spawns a cellular automaton of an explosion
-/proc/cell_explosion(var/turf/epicenter, var/power, var/falloff, var/falloff_shape = EXPLOSION_FALLOFF_SHAPE_LINEAR, var/direction, var/datum/cause_data/explosion_cause_data)
+/proc/cell_explosion(var/turf/epicenter, var/power, var/falloff, var/falloff_shape = EXPLOSION_FALLOFF_SHAPE_LINEAR, var/direction, var/datum/cause_data/explosion_cause_data, var/sound/explosion_sound)
 	if(!istype(epicenter))
 		epicenter = get_turf(epicenter)
 
@@ -258,7 +258,10 @@
 	msg_admin_attack("Explosion with Power: [power], Falloff: [falloff], Shape: [falloff_shape] in [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]).", epicenter.x, epicenter.y, epicenter.z)
 
 	playsound(epicenter, 'sound/effects/explosionfar.ogg', 100, 1, round(power^2,1))
-	playsound(epicenter, "explosion", 75, 1, max(round(power,1),7))
+	if(explosion_sound)
+		playsound(epicenter, explosion_sound, 75, 1, max(round(power,1),7))
+	else
+		playsound(epicenter, "explosion", 75, 1, max(round(power,1),7))
 
 	var/datum/automata_cell/explosion/E = new /datum/automata_cell/explosion(epicenter)
 
