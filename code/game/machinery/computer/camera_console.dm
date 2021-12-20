@@ -260,7 +260,7 @@
 /obj/structure/machinery/computer/security/wooden_tv/prop
 	name = "Television Set"
 	desc = "An old TV hooked up to a video cassette recorder, you can even use it to time shift WOW."
-	network = list(CAMERA_NET_MORTAR)
+	network = null
 
 /obj/structure/machinery/computer/security/mining
 	name = "Outpost Cameras"
