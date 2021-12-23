@@ -574,6 +574,7 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	unacidable = TRUE
 	anti_hug = 6
 	specialty = "M3-G4 grenadier"
+	camera.network = list(CAMERA_NET_EXPLOSIVES_SPECIALISTS)
 	flags_item = MOB_LOCK_ON_EQUIP|NO_CRYO_STORE
 
 /obj/item/clothing/head/helmet/marine/scout
