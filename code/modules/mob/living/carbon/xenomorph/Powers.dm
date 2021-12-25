@@ -6,7 +6,7 @@
 
 	var/total_resin_cost = XENO_RESIN_BASE_COST + RC.cost // Live, diet, shit code, repeat
 
-	if(action_busy)
+	if(action_busy && !can_stack_builds)
 		return FALSE
 	if(!check_state())
 		return FALSE
