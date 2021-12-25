@@ -210,6 +210,7 @@
 		to_chat(owner, SPAN_XENOWARNING("This area is too far away to affect!"))
 		return
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 	apply_cooldown()
 	switch(X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod))
 		if(SECRETE_RESIN_INTERRUPT)
@@ -222,6 +223,9 @@
 			return FALSE
 	return TRUE
 =======
+=======
+	apply_cooldown()
+>>>>>>> resin whisperer build stacking
 	. = X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod)
 <<<<<<< refs/remotes/origin/dev
 	..()

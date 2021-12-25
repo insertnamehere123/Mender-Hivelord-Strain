@@ -8,6 +8,7 @@
 		/datum/action/xeno_action/activable/secrete_resin/hivelord,
 		/datum/action/xeno_action/activable/corrosive_acid,
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 		/datum/action/xeno_action/onclick/toggle_speed
 	)
 	mutator_actions_to_add = list(
@@ -18,6 +19,13 @@
 	mutator_actions_to_add = list(
 		/datum/action/xeno_action/activable/secrete_resin/remote //third macro
 >>>>>>> Xeno Defense Buff
+=======
+		/datum/action/xeno_action/onclick/toggle_speed
+	)
+	mutator_actions_to_add = list(
+		/datum/action/xeno_action/activable/secrete_resin/remote, //third macro
+		/datum/action/xeno_action/onclick/toggle_speed // readding it so it gets at the end of the ability list
+>>>>>>> resin whisperer build stacking
 	)
 	keystone = TRUE
 
@@ -51,10 +59,14 @@
 	ability_name = "coerce resin"
 	var/last_use = 0
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 	xeno_cooldown = 1 SECONDS
 =======
 	xeno_cooldown = 0.5 SECONDS
 >>>>>>> Xeno Defense Buff
+=======
+	xeno_cooldown = 1 SECONDS
+>>>>>>> resin whisperer build stacking
 	thick = FALSE
 	make_message = FALSE
 
