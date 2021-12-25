@@ -493,11 +493,15 @@
 		SSacid_pillar.queue_attack(src, target)
 <<<<<<< refs/remotes/origin/dev
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 		playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
 		flick("acid_pillar_attack", src)
 =======
 >>>>>>> acid pillar nerf
 =======
+=======
+		playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
+>>>>>>> better acid pillar feedback
 		flick("acid_pillar_attack", src)
 >>>>>>> triio's acid pillar sprites
 
@@ -505,6 +509,7 @@
 	if(QDELETED(src))
 		return FALSE
 
+<<<<<<< refs/remotes/origin/dev
 <<<<<<< refs/remotes/origin/dev
 	if(info.distance_travelled > range || info.current_turf == info.target_turf)
 		return FALSE
@@ -515,6 +520,9 @@
 
 =======
 	if(info.distance_travelled > range)
+=======
+	if(info.distance_travelled > range || info.current_turf == info.target_turf)
+>>>>>>> better acid pillar feedback
 		return FALSE
 
 	var/turf/next_turf = get_step_towards(info.current_turf, info.target_turf)
