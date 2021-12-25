@@ -209,6 +209,7 @@
 	if(A.z != X.z)
 		to_chat(owner, SPAN_XENOWARNING("This area is too far away to affect!"))
 		return
+	apply_cooldown()
 	. = X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod)
 
 // Destructive Acid
