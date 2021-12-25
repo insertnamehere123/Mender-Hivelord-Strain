@@ -223,8 +223,11 @@
 	return TRUE
 =======
 	. = X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod)
+<<<<<<< refs/remotes/origin/dev
 	..()
 >>>>>>> Resin Whisperer Nerf
+=======
+>>>>>>> fixes a couple bugs
 
 // Destructive Acid
 /datum/action/xeno_action/activable/corrosive_acid/use_ability(atom/A)

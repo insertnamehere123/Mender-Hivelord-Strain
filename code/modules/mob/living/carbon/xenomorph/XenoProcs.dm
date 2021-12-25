@@ -138,7 +138,11 @@
 			return FALSE
 		else if(caste_type != XENO_CASTE_QUEEN && observed_xeno)
 			to_chat(src, SPAN_WARNING("You cannot do this in your current state."))
+<<<<<<< refs/remotes/origin/dev
 			return FALSE
+=======
+			return
+>>>>>>> fixes a couple bugs
 	else
 		if(is_mob_incapacitated() || buckled)
 			to_chat(src, SPAN_WARNING("You cannot do this in your current state."))
