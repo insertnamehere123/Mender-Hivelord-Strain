@@ -7,9 +7,11 @@
 	mutator_actions_to_remove = list(
 		/datum/action/xeno_action/activable/secrete_resin/hivelord,
 		/datum/action/xeno_action/activable/corrosive_acid,
+		/datum/action/xeno_action/onclick/toggle_speed
 	)
 	mutator_actions_to_add = list(
-		/datum/action/xeno_action/activable/secrete_resin/remote //third macro
+		/datum/action/xeno_action/activable/secrete_resin/remote, //third macro
+		/datum/action/xeno_action/onclick/toggle_speed // readding it so it gets at the end of the ability list
 	)
 	keystone = TRUE
 
@@ -21,6 +23,7 @@
 	var/mob/living/carbon/Xenomorph/Hivelord/H = MS.xeno
 	H.plasmapool_modifier = 0.8 // -20% plasma pool
 	H.extra_build_dist = 12 // 1 + 12 = 13 tile build range
+	H.can_stack_builds = TRUE
 
 	H.client.change_view(10, src)
 
@@ -41,7 +44,7 @@
 	action_icon_state = "secrete_resin"
 	ability_name = "coerce resin"
 	var/last_use = 0
-	xeno_cooldown = 0.5 SECONDS
+	xeno_cooldown = 1 SECONDS
 	thick = FALSE
 	make_message = FALSE
 
@@ -82,8 +85,6 @@
 	T.visible_message(SPAN_XENONOTICE("The weeds begin pulsating wildly and secrete resin in the shape of \a [RC.construction_name]!"), null, 5)
 	to_chat(owner, SPAN_XENONOTICE("You focus your plasma into the weeds below you and force the weeds to secrete resin in the shape of \a [RC.construction_name]."))
 	playsound(T, "alien_resin_build", 25)
-
-	apply_cooldown()
 
 /datum/action/xeno_action/verb/verb_coerce_resin()
 	set category = "Alien"
