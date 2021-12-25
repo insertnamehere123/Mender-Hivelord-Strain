@@ -474,13 +474,14 @@
 	if(target)
 		currently_firing = TRUE
 		SSacid_pillar.queue_attack(src, target)
+		playsound(loc, 'sound/effects/splat.ogg', 50, TRUE)
 		flick("acid_pillar_attack", src)
 
 /obj/effect/alien/resin/acid_pillar/proc/acid_travel(var/datum/acid_spray_info/info)
 	if(QDELETED(src))
 		return FALSE
 
-	if(info.distance_travelled > range)
+	if(info.distance_travelled > range || info.current_turf == info.target_turf)
 		return FALSE
 
 	var/turf/next_turf = get_step_towards(info.current_turf, info.target_turf)
