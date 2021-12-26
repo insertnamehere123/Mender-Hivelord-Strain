@@ -112,7 +112,7 @@
 
 	START_PROCESSING(SSobj, src)
 	addtimer(CALLBACK(src, .proc/die), time_to_live)
-	animate(src, time_to_live + 1, alpha = 0)
+	animate(src, time_to_live, alpha = 128)
 
 /obj/effect/xenomorph/spray/Destroy()
 	STOP_PROCESSING(SSobj, src)
