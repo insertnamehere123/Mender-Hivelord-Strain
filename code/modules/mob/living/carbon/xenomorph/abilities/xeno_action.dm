@@ -198,7 +198,7 @@
 	cooldown_to_apply = cooldown_to_apply * (1 - Clamp(X.cooldown_reduction_percentage, 0, 0.5))
 
 	// Add a unique timer
-	cooldown_timer_id = addtimer(CALLBACK(src, .proc/on_cooldown_end), cooldown_to_apply, TIMER_UNIQUE | TIMER_STOPPABLE)
+	cooldown_timer_id = addtimer(CALLBACK(src, .proc/on_cooldown_end), cooldown_to_apply, TIMER_UNIQUE|TIMER_STOPPABLE)
 	current_cooldown_duration = cooldown_to_apply
 	current_cooldown_start_time = world.time
 
@@ -211,11 +211,12 @@
 /datum/action/xeno_action/proc/apply_cooldown_override(cooldown_duration)
 	if(!owner)
 		return
+	deltimer(cooldown_timer_id) // overrides the cooldown if one exists
+
 	var/mob/living/carbon/Xenomorph/X = owner
 	// Note: no check to see if we're already on CD. we just flat override whatever's there
 	cooldown_duration = cooldown_duration * (1 - Clamp(X.cooldown_reduction_percentage, 0, 0.5))
-
-	cooldown_timer_id = addtimer(CALLBACK(src, .proc/on_cooldown_end), cooldown_duration, TIMER_OVERRIDE|TIMER_UNIQUE | TIMER_STOPPABLE)
+	cooldown_timer_id = addtimer(CALLBACK(src, .proc/on_cooldown_end), cooldown_duration, TIMER_OVERRIDE|TIMER_UNIQUE|TIMER_STOPPABLE)
 	current_cooldown_duration = cooldown_duration
 	current_cooldown_start_time = world.time
 

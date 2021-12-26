@@ -210,7 +210,16 @@
 		to_chat(owner, SPAN_XENOWARNING("This area is too far away to affect!"))
 		return
 	apply_cooldown()
-	. = X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod)
+	switch(X.build_resin(A, thick, make_message, plasma_cost != 0, build_speed_mod))
+		if(SECRETE_RESIN_INTERRUPT)
+			if(xeno_cooldown)
+				apply_cooldown_override(xeno_cooldown * 2)
+			return FALSE
+		if(SECRETE_RESIN_FAIL)
+			if(xeno_cooldown)
+				apply_cooldown_override(1)
+			return FALSE
+	return TRUE
 
 // Destructive Acid
 /datum/action/xeno_action/activable/corrosive_acid/use_ability(atom/A)
