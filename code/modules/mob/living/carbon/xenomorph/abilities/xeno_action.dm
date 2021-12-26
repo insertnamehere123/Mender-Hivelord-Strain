@@ -212,12 +212,18 @@
 	if(!owner)
 		return
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 
 	if(cooldown_timer_id != TIMER_ID_NULL)
 		deltimer(cooldown_timer_id)
 =======
 	deltimer(cooldown_timer_id) // overrides the cooldown if one exists
 >>>>>>> suggested tweaks
+=======
+
+	if(cooldown_timer_id != TIMER_ID_NULL)
+		deltimer(cooldown_timer_id)
+>>>>>>> tweaks during TM
 
 	var/mob/living/carbon/Xenomorph/X = owner
 	// Note: no check to see if we're already on CD. we just flat override whatever's there
