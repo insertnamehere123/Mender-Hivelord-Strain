@@ -222,6 +222,7 @@
 				apply_cooldown_override(1)
 			return FALSE
 	return TRUE
+<<<<<<< refs/remotes/origin/dev
 =======
 =======
 	apply_cooldown()
@@ -232,6 +233,8 @@
 >>>>>>> Resin Whisperer Nerf
 =======
 >>>>>>> fixes a couple bugs
+=======
+>>>>>>> suggested tweaks
 
 // Destructive Acid
 /datum/action/xeno_action/activable/corrosive_acid/use_ability(atom/A)

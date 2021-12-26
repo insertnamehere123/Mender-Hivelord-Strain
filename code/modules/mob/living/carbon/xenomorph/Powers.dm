@@ -8,10 +8,14 @@
 
 	if(action_busy && !can_stack_builds)
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 		return SECRETE_RESIN_FAIL
 =======
 		return FALSE
 >>>>>>> resin whisperer build stacking
+=======
+		return SECRETE_RESIN_FAIL
+>>>>>>> suggested tweaks
 	if(!check_state())
 		return SECRETE_RESIN_FAIL
 	if(use_plasma && !check_plasma(total_resin_cost))
@@ -31,10 +35,14 @@
 	if(extra_build_dist != IGNORE_BUILD_DISTANCE && get_dist(src, A) > src.caste.max_build_dist + extra_build_dist) // Hivelords and eggsac carriers have max_build_dist of 1, drones and queens 0
 		to_chat(src, SPAN_XENOWARNING("You can't build from that far!"))
 <<<<<<< refs/remotes/origin/dev
+<<<<<<< refs/remotes/origin/dev
 		return SECRETE_RESIN_FAIL
 =======
 		return FALSE
 >>>>>>> fixes a couple bugs
+=======
+		return SECRETE_RESIN_FAIL
+>>>>>>> suggested tweaks
 	else if(thick) //hivelords can thicken existing resin structures.
 		var/thickened = FALSE
 		if(istype(A, /turf/closed/wall/resin))

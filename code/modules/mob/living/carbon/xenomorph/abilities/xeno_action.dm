@@ -211,9 +211,13 @@
 /datum/action/xeno_action/proc/apply_cooldown_override(cooldown_duration)
 	if(!owner)
 		return
+<<<<<<< refs/remotes/origin/dev
 
 	if(cooldown_timer_id != TIMER_ID_NULL)
 		deltimer(cooldown_timer_id)
+=======
+	deltimer(cooldown_timer_id) // overrides the cooldown if one exists
+>>>>>>> suggested tweaks
 
 	var/mob/living/carbon/Xenomorph/X = owner
 	// Note: no check to see if we're already on CD. we just flat override whatever's there
