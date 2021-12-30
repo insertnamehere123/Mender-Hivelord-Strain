@@ -27,3 +27,11 @@
 	spray_distance = 6 				// Distance to spray
 	spray_effect_type = /obj/effect/xenomorph/spray/weak
 	activation_delay = FALSE		    // Is there an activation delay?
+
+//Marker abilities
+
+/datum/action/xeno_action/onclick/toggle_long_range/marker
+	movement_datum_type = /datum/event_handler/xeno_zoom_onmovement/buffer
+	should_delay = TRUE
+	delay = 20
+	ability_primacy = XENO_PRIMARY_ACTION_4
