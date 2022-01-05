@@ -346,3 +346,33 @@
 	var/activation_delay = 1.5 SECONDS
 	var/range = 15
 	var/interrupt_flags = INTERRUPT_ALL|BEHAVIOR_IMMOBILE
+
+/datum/action/xeno_action/activable/spore_puff
+	name = "spore puff"
+	ability_name = "spore puff"
+	action_icon_state = "warden_heal"
+	plasma_cost = 50
+	macro_path = /datum/action/xeno_action/verb/verb_bombard
+	action_type = XENO_ACTION_CLICK
+	xeno_cooldown = 10
+
+	// Range and other config
+	var/effect_range = 2
+	var/effect_type = /obj/effect/xenomorph/spore_puff
+	var/activation_delay = 0 SECONDS
+	var/range = 16
+
+/datum/action/xeno_action/activable/spore_puff_shield
+	name = "spore puff"
+	ability_name = "spore puff shield"
+	action_icon_state = "warden_shield"
+	plasma_cost = 50
+	macro_path = /datum/action/xeno_action/verb/verb_bombard
+	action_type = XENO_ACTION_CLICK
+	xeno_cooldown = 10
+
+	// Range and other config
+	var/effect_range = 2
+	var/effect_type = /obj/effect/xenomorph/spore_puff_shield
+	var/activation_delay = 0 SECONDS
+	var/range = 16
