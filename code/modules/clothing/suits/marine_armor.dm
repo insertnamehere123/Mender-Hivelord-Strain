@@ -1523,6 +1523,95 @@ var/list/squad_colors_chat = list(rgb(230,125,125), rgb(255,230,80), rgb(255,150
 	armor_internaldamage = CLOTHING_ARMOR_HIGH
 	storage_slots = 2
 
+/obj/item/clothing/suit/storage/marine/faction/UPP/boarding
+	name = "\improper UH10 Boarding Armour"
+	desc = "The hallmark of UPP armour design; a superheavy armour and compression suit hybrid made specifically for close range combat and boaring operations in hard vaccum enviroments"
+	permeability_coefficient = 0
+	gas_transfer_coefficient = 0
+	slowdown = SLOWDOWN_ARMOR_SUPER_HEAVY
+	movement_compensation = SLOWDOWN_ARMOR_SUPER_HEAVY
+	flags_armor_protection = BODY_FLAG_ALL_BUT_HEAD
+	armor_melee = CLOTHING_ARMOR_ULTRAHIGH
+	armor_bullet = CLOTHING_ARMOR_ULTRAHIGH
+	armor_laser = CLOTHING_ARMOR_HIGHPLUS
+	armor_energy = CLOTHING_ARMOR_HIGHPLUS
+	armor_bomb = CLOTHING_ARMOR_HIGH
+	armor_bio = CLOTHING_ARMOR_HARDCORE
+	armor_rad = CLOTHING_ARMOR_HARDCORE
+	armor_internaldamage = CLOTHING_ARMOR_ULTRAHIGH
+	fire_intensity_resistance = BURN_LEVEL_TIER_1
+	flags_inventory = BLOCK_KNOCKDOWN|BLOCKSHARPOBJ|NOPRESSUREDMAGE
+	siemens_coefficient = 0
+	storage_slots = 1
+	var/caster_active = 0
+	var/charge = 600
+	var/charge_max = 600
+
+/obj/item/clothing/suit/storage/marine/faction/UPP/boarding/proc/drain_power(var/mob/living/carbon/human/M, var/amount)
+	if(!M) return 0
+	if(charge < amount)
+		to_chat(M, SPAN_WARNING("Your suit is out of spare magazines."))
+		return 0
+	charge -= amount
+	var/perc = (charge / charge_max * 100)
+	M.update_power_display(perc)
+
+/obj/item/clothing/suit/storage/marine/faction/UPP/boarding/examine(mob/user)
+	..()
+	to_chat(user, "You currently have [charge/50] spare magazines.")
+
+/obj/item/clothing/suit/storage/marine/faction/UPP/boarding/verb/integrated()
+	set name = "Use integrated weapon"
+	set desc = "Activate your integrated weapon. If it is dropped it will retract back into your armor."
+	set category = "Integrated.Weapons"
+	set src in usr
+	. = weapon_internal(FALSE)
+
+/obj/item/clothing/suit/storage/marine/faction/UPP/boarding/proc/weapon_internal()
+	if(!usr.loc || !usr.canmove || usr.stat) return
+	var/mob/living/carbon/human/M = usr
+	var/obj/item/weapon/gun/rifle/type71/integrated/R = usr.r_hand
+	var/obj/item/weapon/gun/rifle/type71/integrated/L = usr.l_hand
+	if(!istype(R) && !istype(L))
+		caster_active = 0
+	if(caster_active) //Turn it off.
+		var/found = 0
+		if(R && istype(R))
+			found = 1
+			usr.r_hand = null
+			if(R)
+				M.temp_drop_inv_item(R)
+				R.forceMove(src)
+			M.update_inv_r_hand()
+		if(L && istype(L))
+			found = 1
+			usr.l_hand = null
+			if(L)
+				M.temp_drop_inv_item(L)
+				L.forceMove(src)
+			M.update_inv_l_hand()
+		if(found)
+			to_chat(usr, SPAN_NOTICE("The weapon retracts, excess ammo is dumped and you can use your extrmeties again."))
+			playsound(src,'sound/weapons/pred_plasmacaster_off.ogg', 15, 1)
+			caster_active = 0
+		return
+	else //Turn it on!
+		if(usr.get_active_hand())
+			to_chat(usr, SPAN_WARNING("Your hand must be free to deploy the weapon"))
+			return
+		if(charge == 0)
+			to_chat(usr, SPAN_WARNING("Your suit is out of spare magazines"))
+			return
+
+		var/obj/item/weapon/gun/rifle/type71/integrated/W
+		if(!istype(W))
+			W = new(usr)
+		usr.put_in_active_hand(W)
+		caster_active = 1
+		to_chat(usr, SPAN_NOTICE("You activate the integrated weapon and a new magazine is loaded."))
+		playsound(src,'sound/weapons/pred_plasmacaster_on.ogg', 15, 1)
+		drain_power(usr,50)
+	return 1
 
 //===========================//FREELANCER\\================================\\
 //=====================================================================\\
