@@ -37,6 +37,21 @@
 	icon_state = "marine_jungle"
 	desc = "Don't go walkin' slow, the devils on the loose."
 
+/obj/item/clothing/shoes/marine/armoured
+	name = "Armoured combat boots"
+	desc = "Reinforced boots for added protection at the cost of some mobility."
+	icon_state = "marine"
+	item_state = "marine"
+	armor_melee = CLOTHING_ARMOR_MEDIUMHIGH
+	armor_bullet = CLOTHING_ARMOR_MEDIUM
+	armor_laser = CLOTHING_ARMOR_LOW
+	armor_energy = CLOTHING_ARMOR_NONE
+	armor_bomb = CLOTHING_ARMOR_MEDIUMLOW
+	armor_bio = CLOTHING_ARMOR_MEDIUMLOW
+	armor_rad = CLOTHING_ARMOR_NONE
+	slowdown = SHOES_SLOWDOWN_LIGHT
+	flags_armor_protection = BODY_FLAG_FEET
+
 /obj/item/clothing/shoes/marine/upp
 	name = "military combat boots"
 	armor_melee = CLOTHING_ARMOR_MEDIUMLOW

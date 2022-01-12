@@ -77,6 +77,7 @@
 
 //Slowdown from various armors.
 #define SHOES_SLOWDOWN -1.0			// How much shoes slow you down by default. Negative values speed you up
+#define SHOES_SLOWDOWN_LIGHT		-0.90
 #define SLOWDOWN_ARMOR_NONE         0
 #define SLOWDOWN_ARMOR_VERY_LIGHT	0.20
 #define SLOWDOWN_ARMOR_LIGHT		0.35
