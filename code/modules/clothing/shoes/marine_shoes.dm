@@ -81,7 +81,7 @@
 	min_cold_protection_temperature = SHOE_min_cold_protection_temperature
 	max_heat_protection_temperature = SHOE_max_heat_protection_temperature
 	fire_intensity_resistance = BURN_LEVEL_TIER_1
-	flags_inventory = BLOCK_KNOCKDOWN|BLOCKSHARPOBJ|NOPRESSUREDMAGE
+	flags_inventory = BLOCK_KNOCKDOWN|BLOCKSHARPOBJ|NOPRESSUREDMAGE|BLOCKGASEFFECT
 	siemens_coefficient = 0
 
 /obj/item/clothing/shoes/dress

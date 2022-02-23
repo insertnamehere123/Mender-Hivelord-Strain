@@ -938,7 +938,7 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	armor_rad = CLOTHING_ARMOR_HARDCORE
 	armor_internaldamage = CLOTHING_ARMOR_ULTRAHIGH
 	fire_intensity_resistance = BURN_LEVEL_TIER_1
-	flags_inventory = BLOCK_KNOCKDOWN|BLOCKSHARPOBJ|NOPRESSUREDMAGE
+	flags_inventory = BLOCK_KNOCKDOWN|BLOCKSHARPOBJ|NOPRESSUREDMAGE|BLOCKGASEFFECT
 	siemens_coefficient = 0
 
 /obj/item/clothing/head/uppcap
